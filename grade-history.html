@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Grade History - GradeSync Pro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(145deg, #0B3B2A 0%, #1A4F3A 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 12px;
+        }
+
+        .app-container {
+            max-width: 420px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border-radius: 48px;
+            box-shadow: 0 30px 60px rgba(0, 100, 0, 0.4);
+            overflow: hidden;
+            border: 2px solid #2E7D32;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1B5E20 0%, #2E7D32 100%);
+            padding: 30px 24px;
+            position: relative;
+        }
+
+        .app-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .logo-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #FFFFFF 0%, #E8F5E9 100%);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: 800;
+            color: #1B5E20;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .logo-text span {
+            color: #C8E6C9;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 30px;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .content {
+            padding: 24px;
+            background: #F1F8E9;
+            min-height: 600px;
+        }
+
+        .modern-card {
+            background: white;
+            border-radius: 32px;
+            padding: 24px;
+            box-shadow: 0 15px 30px rgba(46, 125, 50, 0.15);
+            margin-bottom: 20px;
+            border: 2px solid #A5D6A7;
+        }
+
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #C8E6C9;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-left: 50px;
+            margin-bottom: 30px;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: 12px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #2E7D32;
+            border: 3px solid #A5D6A7;
+        }
+
+        .timeline-date {
+            font-size: 12px;
+            color: #2E7D32;
+            margin-bottom: 5px;
+        }
+
+        .timeline-content {
+            background: #F1F8E9;
+            border-radius: 16px;
+            padding: 15px;
+            border: 2px solid #C8E6C9;
+        }
+
+        .timeline-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .timeline-subject {
+            font-weight: 700;
+            color: #1B5E20;
+        }
+
+        .timeline-grade {
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .grade-pass { background: #A5D6A7; color: #1B5E20; }
+        .grade-fail { background: #FFCDD2; color: #C62828; }
+
+        .timeline-details {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .detail-item {
+            text-align: center;
+        }
+
+        .detail-label {
+            font-size: 11px;
+            color: #2E7D32;
+        }
+
+        .detail-value {
+            font-weight: 700;
+            color: #1B5E20;
+        }
+
+        .chart-container {
+            height: 200px;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .progress-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .progress-bar-small {
+            flex: 1;
+            height: 8px;
+            background: #E8F5E9;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill-small {
+            height: 100%;
+            background: linear-gradient(90deg, #2E7D32, #4CAF50);
+        }
+
+        .semester-summary {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .summary-box {
+            background: #E8F5E9;
+            border-radius: 16px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .summary-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2E7D32;
+        }
+
+        .summary-label {
+            font-size: 11px;
+            color: #1B5E20;
+        }
+
+        .footer {
+            background: white;
+            padding: 20px;
+            text-align: center;
+            color: #2E7D32;
+            font-size: 13px;
+            border-top: 2px solid #A5D6A7;
+        }
+
+        .trend-up { color: #2E7D32; }
+        .trend-down { color: #C62828; }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <div class="header">
+            <div class="app-logo">
+                <div class="logo-icon"><i class="fas fa-history"></i></div>
+                <div class="logo-text">Grade<span>History</span></div>
+            </div>
+            <a href="student-dashboard-unique.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Back
+            </a>
+        </div>
+        
+        <div class="content">
+            <div class="modern-card">
+                <h2 style="color: #1B5E20; margin-bottom: 20px;">
+                    <i class="fas fa-chart-line"></i> Performance Timeline
+                </h2>
+
+                <div class="semester-summary" id="semesterSummary">
+                    <!-- Summary will be loaded here -->
+                </div>
+
+                <div class="chart-container" id="trendChart">
+                    <!-- Simple trend visualization -->
+                    <div id="trendBars" style="display: flex; align-items: flex-end; gap: 10px; height: 150px;">
+                        <!-- Bars will be added here -->
+                    </div>
+                </div>
+
+                <h3 style="color: #1B5E20; margin: 20px 0 10px;">
+                    <i class="fas fa-clock"></i> Grade Timeline
+                </h3>
+
+                <div class="timeline" id="timeline">
+                    <!-- Timeline items will be loaded here -->
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <i class="fas fa-history"></i> Grade History • Academic Journey
+        </div>
+    </div>
+
+    <script>
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        const authToken = localStorage.getItem('authToken');
+
+        if (!currentUser || !authToken || currentUser.role !== 'student') {
+            window.location.href = 'index.html';
+        }
+
+        const allGrades = JSON.parse(localStorage.getItem('secure_grades')) || [];
+        const studentGrades = allGrades.filter(g => g.studentId === currentUser.id)
+            .sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        function displaySemesterSummary() {
+            if (studentGrades.length === 0) {
+                document.getElementById('semesterSummary').innerHTML = 
+                    '<div style="grid-column: span 2; text-align: center; color: #2E7D32;">No grades available</div>';
+                return;
+            }
+
+            // Group by semester (simplified - group by 6-month periods)
+            const semesters = {};
+            studentGrades.forEach(grade => {
+                const date = new Date(grade.date);
+                const semesterKey = `${date.getFullYear()}-${date.getMonth() < 6 ? '1' : '2'}`;
+                if (!semesters[semesterKey]) {
+                    semesters[semesterKey] = [];
+                }
+                semesters[semesterKey].push(grade);
+            });
+
+            const semesterKeys = Object.keys(semesters).sort().reverse();
+            const current = semesters[semesterKeys[0]] || [];
+            const previous = semesters[semesterKeys[1]] || [];
+
+            // Calculate current semester average
+            let currentTotal = 0;
+            current.forEach(g => {
+                currentTotal += (g.prelim + g.midterm + g.final) / 3;
+            });
+            const currentAvg = current.length > 0 ? (currentTotal / current.length).toFixed(1) : 0;
+
+            // Calculate previous semester average
+            let previousTotal = 0;
+            previous.forEach(g => {
+                previousTotal += (g.prelim + g.midterm + g.final) / 3;
+            });
+            const previousAvg = previous.length > 0 ? (previousTotal / previous.length).toFixed(1) : 0;
+
+            // Calculate trend
+            const trend = currentAvg - previousAvg;
+            const trendIcon = trend > 0 ? 
+                '<i class="fas fa-arrow-up trend-up"></i>' : 
+                trend < 0 ? 
+                '<i class="fas fa-arrow-down trend-down"></i>' : 
+                '<i class="fas fa-minus"></i>';
+
+            document.getElementById('semesterSummary').innerHTML = `
+                <div class="summary-box">
+                    <div class="summary-value">${studentGrades.length}</div>
+                    <div class="summary-label">Total Grades</div>
+                </div>
+                <div class="summary-box">
+                    <div class="summary-value">${currentAvg}%</div>
+                    <div class="summary-label">Current Sem ${trendIcon}</div>
+                </div>
+            `;
+
+            // Create trend bars
+            const months = ['Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb'];
+            const bars = document.getElementById('trendBars');
+            bars.innerHTML = '';
+
+            // Group by month for trend
+            const monthlyAverages = {};
+            studentGrades.forEach(grade => {
+                const date = new Date(grade.date);
+                const monthKey = `${date.getFullYear()}-${date.getMonth()}`;
+                const avg = (grade.prelim + grade.midterm + grade.final) / 3;
+                
+                if (!monthlyAverages[monthKey]) {
+                    monthlyAverages[monthKey] = { total: 0, count: 0 };
+                }
+                monthlyAverages[monthKey].total += avg;
+                monthlyAverages[monthKey].count++;
+            });
+
+            const monthlyData = Object.values(monthlyAverages).slice(-6);
+            const maxAvg = Math.max(...monthlyData.map(m => m.total / m.count)) || 100;
+
+            monthlyData.forEach((data, index) => {
+                const avg = data.total / data.count;
+                const height = (avg / maxAvg) * 120;
+                bars.innerHTML += `
+                    <div style="flex: 1; text-align: center;">
+                        <div style="height: ${height}px; background: #2E7D32; border-radius: 5px 5px 0 0;"></div>
+                        <div style="font-size: 10px; margin-top: 5px; color: #2E7D32;">${months[index]}</div>
+                        <div style="font-size: 10px; font-weight: 700;">${avg.toFixed(0)}%</div>
+                    </div>
+                `;
+            });
+        }
+
+        function displayTimeline() {
+            const timeline = document.getElementById('timeline');
+            
+            if (studentGrades.length === 0) {
+                timeline.innerHTML = '<p style="text-align: center; color: #2E7D32; padding: 40px;">No grade history available</p>';
+                return;
+            }
+
+            let html = '';
+            studentGrades.slice(0, 10).forEach(grade => {
+                const avg = ((grade.prelim + grade.midterm + grade.final) / 3).toFixed(1);
+                const date = new Date(grade.date).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                
+                const passingGrade = grade.level === 'college' ? 60 : 75;
+                const status = avg >= passingGrade ? 'PASS' : 'FAIL';
+                const statusClass = avg >= passingGrade ? 'grade-pass' : 'grade-fail';
+
+                html += `
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-date">${date}</div>
+                        <div class="timeline-content">
+                            <div class="timeline-header">
+                                <span class="timeline-subject">${grade.subject}</span>
+                                <span class="timeline-grade ${statusClass}">${status}</span>
+                            </div>
+                            <div class="timeline-details">
+                                <div class="detail-item">
+                                    <div class="detail-value">${grade.prelim}</div>
+                                    <div class="detail-label">Prelim</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-value">${grade.midterm}</div>
+                                    <div class="detail-label">Midterm</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-value">${grade.final}</div>
+                                    <div class="detail-label">Final</div>
+                                </div>
+                            </div>
+                            <div class="progress-indicator">
+                                <span style="font-size: 11px; color: #2E7D32;">Average: ${avg}%</span>
+                                <div class="progress-bar-small">
+                                    <div class="progress-fill-small" style="width: ${avg}%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            timeline.innerHTML = html;
+        }
+
+        // Initialize
+        displaySemesterSummary();
+        displayTimeline();
+    </script>
+</body>
+</html>

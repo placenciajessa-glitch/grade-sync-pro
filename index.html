@@ -1,0 +1,2147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GradeSync Pro - Gmail Connected</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(145deg, #0B3B2A 0%, #1A4F3A 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 12px;
+        }
+
+        /* Loading Screen Styles */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(145deg, #0B3B2A 0%, #1A4F3A 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .loading-logo {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #FFFFFF 0%, #E8F5E9 100%);
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            font-weight: 800;
+            color: #1B5E20;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            animation: pulse-logo 2s infinite;
+            margin-bottom: 20px;
+        }
+
+        .loading-logo i {
+            color: #1B5E20;
+        }
+
+        @keyframes pulse-logo {
+            0% { transform: scale(1); box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
+            50% { transform: scale(1.05); box-shadow: 0 15px 50px rgba(46, 125, 50, 0.4); }
+            100% { transform: scale(1); box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
+        }
+
+        .loading-text {
+            color: white;
+            font-size: 32px;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            margin-bottom: 10px;
+        }
+
+        .loading-text span {
+            color: #C8E6C9;
+        }
+
+        .loading-subtitle {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        .loading-spinner-container {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .loading-dot {
+            width: 12px;
+            height: 12px;
+            background: #4CAF50;
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+
+        .loading-dot:nth-child(1) {
+            animation-delay: -0.32s;
+        }
+
+        .loading-dot:nth-child(2) {
+            animation-delay: -0.16s;
+        }
+
+        @keyframes bounce {
+            0%, 80%, 100% {
+                transform: scale(0);
+            }
+            40% {
+                transform: scale(1);
+            }
+        }
+
+        .loading-progress {
+            width: 200px;
+            height: 4px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 2px;
+            margin-top: 30px;
+            overflow: hidden;
+        }
+
+        .loading-progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #4CAF50, #81C784);
+            border-radius: 2px;
+            animation: progress 2.5s ease-in-out forwards;
+        }
+
+        @keyframes progress {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+
+        .app-container {
+            max-width: 420px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border-radius: 48px;
+            box-shadow: 0 30px 60px rgba(0, 100, 0, 0.4);
+            overflow: hidden;
+            border: 2px solid #2E7D32;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .app-container.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1B5E20 0%, #2E7D32 100%);
+            padding: 30px 24px;
+            position: relative;
+        }
+
+        .app-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .logo-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #FFFFFF 0%, #E8F5E9 100%);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: 800;
+            color: #1B5E20;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .logo-text {
+            font-size: 28px;
+            font-weight: 700;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .logo-text span {
+            color: #C8E6C9;
+        }
+
+        .header h1 {
+            color: white;
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .gmail-badge {
+            background: #EA4335;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 5px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .gmail-connected {
+            background: #34A853;
+        }
+
+        .content {
+            padding: 24px;
+            background: #F1F8E9;
+        }
+
+        .modern-card {
+            background: white;
+            border-radius: 32px;
+            padding: 24px;
+            box-shadow: 0 15px 30px rgba(46, 125, 50, 0.15);
+            border: 2px solid #A5D6A7;
+        }
+
+        .gmail-status {
+            background: #E8F5E9;
+            border-radius: 16px;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: 2px solid #A5D6A7;
+        }
+
+        .gmail-status-icon {
+            width: 40px;
+            height: 40px;
+            background: #EA4335;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+
+        .gmail-status-text {
+            flex: 1;
+        }
+
+        .gmail-status-title {
+            font-weight: 600;
+            color: #1B5E20;
+            font-size: 14px;
+        }
+
+        .gmail-status-email {
+            font-size: 12px;
+            color: #2E7D32;
+        }
+
+        .gmail-status-badge {
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .badge-connected {
+            background: #34A853;
+            color: white;
+        }
+
+        .badge-disconnected {
+            background: #EA4335;
+            color: white;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #1B5E20;
+            margin-bottom: 8px;
+        }
+
+        .form-label i {
+            margin-right: 5px;
+            color: #2E7D32;
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: 16px 20px;
+            font-size: 16px;
+            border: 2px solid #C8E6C9;
+            border-radius: 20px;
+            background: white;
+            transition: all 0.3s;
+        }
+
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: #2E7D32;
+            box-shadow: 0 0 0 4px rgba(46, 125, 50, 0.1);
+        }
+
+        .gmail-input {
+            background: #fce8e6;
+            border-color: #EA4335;
+            padding-left: 50px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23EA4335" width="20px" height="20px"><path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: 15px center;
+            background-size: 20px;
+        }
+
+        .role-selector {
+            display: flex;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .role-btn {
+            flex: 1;
+            padding: 16px;
+            border-radius: 20px;
+            border: 2px solid #C8E6C9;
+            background: white;
+            font-size: 16px;
+            font-weight: 600;
+            color: #2E7D32;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .role-btn i {
+            font-size: 1.4rem;
+        }
+
+        .role-btn:hover {
+            border-color: #2E7D32;
+            background: #E8F5E9;
+        }
+
+        .role-btn.active {
+            background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
+            border-color: #1B5E20;
+            color: white;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 18px;
+            border: none;
+            border-radius: 24px;
+            background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(46, 125, 50, 0.3);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid #2E7D32;
+            border-radius: 24px;
+            background: transparent;
+            color: #2E7D32;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-secondary:hover {
+            background: #E8F5E9;
+        }
+
+        .btn-google {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid #EA4335;
+            border-radius: 24px;
+            background: white;
+            color: #EA4335;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-google:hover {
+            background: #fce8e6;
+        }
+
+        .forgot-link {
+            text-align: right;
+            margin: 8px 0 15px;
+        }
+        
+        .forgot-link a {
+            color: #1B5E20;
+            font-size: 13px;
+            font-weight: 500;
+            text-decoration: none;
+            border-bottom: 1px dashed #A5D6A7;
+            cursor: pointer;
+        }
+        
+        .forgot-link a:hover {
+            color: #EA4335;
+            border-bottom-color: #EA4335;
+        }
+
+        .error-message {
+            background: #FFEBEE;
+            color: #C62828;
+            padding: 12px;
+            border-radius: 16px;
+            margin-top: 15px;
+            font-size: 14px;
+            display: none;
+            border: 1px solid #EF9A9A;
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .success-message {
+            background: #E8F5E9;
+            color: #2E7D32;
+            padding: 12px;
+            border-radius: 16px;
+            margin-top: 15px;
+            font-size: 14px;
+            display: none;
+            border: 1px solid #A5D6A7;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .gmail-note {
+            font-size: 11px;
+            color: #666;
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .gmail-features {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .gmail-feature {
+            background: #E8F5E9;
+            border-radius: 12px;
+            padding: 10px;
+            text-align: center;
+            font-size: 11px;
+            color: #1B5E20;
+            border: 1px solid #A5D6A7;
+        }
+
+        .gmail-feature i {
+            font-size: 16px;
+            color: #EA4335;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .footer {
+            background: white;
+            padding: 15px;
+            text-align: center;
+            color: #2E7D32;
+            font-size: 12px;
+            border-top: 2px solid #A5D6A7;
+        }
+
+        .footer i {
+            margin: 0 3px;
+        }
+
+        .dynamic-fields {
+            background: #F1F8E9;
+            border-radius: 16px;
+            padding: 15px;
+            margin: 15px 0;
+            border: 2px solid #A5D6A7;
+            display: none;
+        }
+
+        .dynamic-fields.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .invite-code-hint {
+            background: #FFF3E0;
+            border: 2px solid #FF9800;
+            border-radius: 16px;
+            padding: 12px;
+            margin: 15px 0;
+            color: #E65100;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .password-strength {
+            margin-top: 5px;
+            height: 4px;
+            background: #E8F5E9;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .password-strength-bar {
+            height: 100%;
+            width: 0%;
+            transition: all 0.3s;
+        }
+
+        .strength-weak { background: #FF4444; width: 33%; }
+        .strength-medium { background: #FFA000; width: 66%; }
+        .strength-strong { background: #2E7D32; width: 100%; }
+
+        .gmail-contacts {
+            max-height: 200px;
+            overflow-y: auto;
+            background: white;
+            border: 2px solid #C8E6C9;
+            border-radius: 16px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .gmail-contacts.show {
+            display: block;
+        }
+
+        .contact-item {
+            padding: 10px 15px;
+            border-bottom: 1px solid #C8E6C9;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .contact-item:hover {
+            background: #E8F5E9;
+        }
+
+        .contact-item:last-child {
+            border-bottom: none;
+        }
+
+        .contact-avatar {
+            width: 30px;
+            height: 30px;
+            background: #EA4335;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+        }
+
+        .contact-info {
+            flex: 1;
+        }
+
+        .contact-name {
+            font-weight: 600;
+            color: #1B5E20;
+            font-size: 13px;
+        }
+
+        .contact-email {
+            font-size: 11px;
+            color: #2E7D32;
+        }
+
+        /* Reset password section */
+        .reset-section {
+            display: none;
+        }
+        
+        /* College Fields */
+        .college-fields {
+            margin-top: 15px;
+        }
+
+        /* Developer Portfolio Card Styles */
+        .dev-portfolio-card {
+            margin-top: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .dev-portfolio-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 35px rgba(46, 125, 50, 0.2);
+        }
+        
+        .dev-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 12px;
+        }
+        
+        .dev-avatar {
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, #2E7D32, #4CAF50);
+            border-radius: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        .dev-title {
+            flex: 1;
+        }
+        
+        .dev-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1B5E20;
+        }
+        
+        .dev-role {
+            font-size: 12px;
+            color: #2E7D32;
+            opacity: 0.8;
+        }
+        
+        .dev-badge {
+            background: #E8F5E9;
+            padding: 5px 12px;
+            border-radius: 30px;
+            font-size: 11px;
+            color: #1B5E20;
+            font-weight: 600;
+        }
+        
+        .portfolio-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s cubic-bezier(0.33, 1, 0.68, 1);
+            background: #F9FBE7;
+            border-radius: 20px;
+            margin-top: 15px;
+            border: 1px solid #C8E6C9;
+        }
+        
+        .portfolio-details.open {
+            max-height: 750px;
+            padding: 18px;
+        }
+        
+        .skill-tag {
+            display: inline-block;
+            background: #E8F5E9;
+            color: #1B5E20;
+            padding: 5px 12px;
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: 500;
+            margin: 4px 6px 4px 0;
+        }
+        
+        .project-item {
+            border-left: 3px solid #4CAF50;
+            padding-left: 12px;
+            margin: 12px 0;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 18px;
+            margin-top: 15px;
+            justify-content: center;
+        }
+        
+        .social-links a {
+            color: #2E7D32;
+            font-size: 22px;
+            transition: all 0.2s;
+        }
+        
+        .social-links a:hover {
+            color: #EA4335;
+            transform: scale(1.1);
+        } 
+        
+        .click-hint {
+            font-size: 11px;
+            color: #81C784;
+            margin-top: 8px;
+            text-align: center;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-logo">
+            <i class="fas fa-graduation-cap"></i>
+        </div>
+        <div class="loading-text">Grade<span>Sync Pro</span></div>
+        <div class="loading-subtitle">Gmail Connected Grade Management</div>
+        <div class="loading-spinner-container">
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+        </div>
+        <div class="loading-progress">
+            <div class="loading-progress-bar"></div>
+        </div>
+    </div>
+
+    <div class="app-container" id="appContainer">
+        <div class="header">
+            <div class="app-logo">
+                <div class="logo-icon"><i class="fas fa-graduation-cap"></i></div>
+                <div class="logo-text">Grade<span>Sync Pro</span></div>
+            </div>
+            <h1>Welcome Back!</h1>
+            <p>Connect with your Gmail account</p>
+            <div class="gmail-badge" id="gmailBadge">
+                <i class="fab fa-google"></i> Gmail Integration
+            </div>
+        </div>
+        
+        <div class="content">
+            <div class="modern-card">
+                <!-- Gmail Connection Status -->
+                <div class="gmail-status" id="gmailStatus">
+                    <div class="gmail-status-icon">
+                        <i class="fab fa-google"></i>
+                    </div>
+                    <div class="gmail-status-text">
+                        <div class="gmail-status-title">Gmail Connection</div>
+                        <div class="gmail-status-email" id="gmailEmail">Not connected</div>
+                    </div>
+                    <div class="gmail-status-badge" id="gmailStatusBadge">Disconnected</div>
+                </div>
+
+                <div class="role-selector">
+                    <button class="role-btn active" onclick="setRole('student')" id="studentRoleBtn">
+                        <i class="fas fa-user-graduate"></i> Student
+                    </button>
+                    <button class="role-btn" onclick="setRole('teacher')" id="teacherRoleBtn">
+                        <i class="fas fa-chalkboard-teacher"></i> Teacher
+                    </button>
+                </div>
+                
+                <!-- Login Form -->
+                <div id="loginForm">
+                    <div class="form-group">
+                        <label class="form-label"><i class="fab fa-google"></i> Gmail Address</label>
+                        <input type="email" class="form-input gmail-input" id="loginEmail" placeholder="your.email@gmail.com" pattern=".+@gmail\.com">
+                        <div class="gmail-note">
+                            <i class="fas fa-info-circle"></i> Use your Gmail account to login
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-lock"></i> Password</label>
+                        <input type="password" class="form-input" id="loginPassword" placeholder="Enter your password">
+                    </div>
+                    
+                    <!-- Forgot Password Link -->
+                    <div class="forgot-link">
+                        <a onclick="showForgotPassword()"><i class="far fa-envelope"></i> Forgot password? Reset via Gmail</a>
+                    </div>
+                    
+                    <!-- Gmail Contacts (Demo) -->
+                    <div class="gmail-contacts" id="gmailContacts">
+                        <div class="contact-item" onclick="selectContact('teacher1@gmail.com', 'Dr. Smith')">
+                            <div class="contact-avatar"><i class="fas fa-chalkboard-teacher"></i></div>
+                            <div class="contact-info">
+                                <div class="contact-name">Dr. Smith</div>
+                                <div class="contact-email">teacher1@gmail.com</div>
+                            </div>
+                        </div>
+                        <div class="contact-item" onclick="selectContact('teacher2@gmail.com', 'Prof. Johnson')">
+                            <div class="contact-avatar"><i class="fas fa-chalkboard-teacher"></i></div>
+                            <div class="contact-info">
+                                <div class="contact-name">Prof. Johnson</div>
+                                <div class="contact-email">teacher2@gmail.com</div>
+                            </div>
+                        </div>
+                        <div class="contact-item" onclick="selectContact('classroom@gmail.com', 'Classroom Sync')">
+                            <div class="contact-avatar"><i class="fas fa-users"></i></div>
+                            <div class="contact-info">
+                                <div class="contact-name">Classroom Sync</div>
+                                <div class="contact-email">classroom@gmail.com</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn-primary" onclick="login()" id="loginBtn">
+                        <i class="fas fa-sign-in-alt"></i> Login with Gmail
+                    </button>
+
+                    <button class="btn-google" onclick="simulateGmailConnection()" id="gmailConnectBtn">
+                        <i class="fab fa-google"></i> Connect Gmail Account
+                    </button>
+                </div>
+
+                <!-- Forgot Password Reset Form -->
+                <div id="forgotPasswordForm" class="reset-section">
+                    <h3 style="color: #1B5E20; margin-bottom: 20px;"><i class="fas fa-key"></i> Reset Password</h3>
+                    
+                    <div class="invite-code-hint">
+                        <i class="fas fa-info-circle fa-lg"></i>
+                        <span>Enter your Gmail to receive a reset code</span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label"><i class="fab fa-google"></i> Gmail Address</label>
+                        <input type="email" class="form-input gmail-input" id="resetEmail" placeholder="your.email@gmail.com">
+                    </div>
+                    
+                    <button class="btn-primary" onclick="sendResetCode()" id="sendResetBtn">
+                        <i class="fas fa-paper-plane"></i> Send Reset Code
+                    </button>
+                    
+                    <div id="resetCodeSection" style="margin-top: 20px; display: none;">
+                        <div class="form-group">
+                            <label class="form-label"><i class="fas fa-hashtag"></i> Verification Code</label>
+                            <input type="text" class="form-input" id="resetCodeInput" placeholder="6-digit code">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label"><i class="fas fa-lock"></i> New Password</label>
+                            <input type="password" class="form-input" id="newPassword" placeholder="Enter new password" onkeyup="updatePasswordStrength(this.value)">
+                            <div class="password-strength">
+                                <div class="password-strength-bar" id="resetPasswordStrengthBar"></div>
+                            </div>
+                            <div class="gmail-note">
+                                <i class="fas fa-info-circle"></i> Min 8 chars, with uppercase, lowercase & number
+                            </div>
+                        </div>
+                        
+                        <button class="btn-primary" onclick="completePasswordReset()">
+                            <i class="fas fa-sync-alt"></i> Reset Password
+                        </button>
+                    </div>
+                    
+                    <button class="btn-secondary" style="margin-top: 15px;" onclick="cancelForgotPassword()">
+                        <i class="fas fa-arrow-left"></i> Back to Login
+                    </button>
+                </div>
+                
+                <div style="margin-top: 20px; text-align: center;">
+                    <p style="color: #2E7D32;">Don't have an account? 
+                        <button class="btn-secondary" style="width: auto; padding: 8px 16px; margin-left: 8px;" onclick="showSignup()">
+                            <i class="fas fa-user-plus"></i> Create Account
+                        </button>
+                    </p>
+                </div>
+
+                <div id="errorMessage" class="error-message"></div>
+                <div id="successMessage" class="success-message"></div>
+            </div>
+
+            <!-- DEVELOPER PORTFOLIO SECTION - Click to Expand -->
+            <div class="modern-card dev-portfolio-card" id="devPortfolioCard" onclick="togglePortfolio()">
+                <div class="dev-header">
+                    <div class="dev-avatar">
+                        <i class="fas fa-laptop-code"></i>
+                    </div>
+                    <div class="dev-title">
+                        <div class="dev-name">Jessa M. Placencia</div>
+                        <div class="dev-role">Full-Stack Developer & Creator</div>
+                    </div>
+                    <div class="dev-badge">
+                        <i class="fas fa-star"></i> About Developer
+                    </div>
+                </div>
+                <div style="font-size: 13px; color: #2E7D32;">
+                    <i class="fas fa-crown"></i> Developer of GradeSync Pro
+                </div>
+                <div class="click-hint">
+                    <i class="fas fa-hand-pointer"></i> Click to see developer information
+                </div>
+                
+                <!-- Hidden Portfolio Details -->
+                <div id="portfolioDetails" class="portfolio-details">
+                    <div style="text-align: center; margin-bottom: 12px;">
+                        <div style="width: 80px; height: 80px; background: linear-gradient(145deg, #2E7D32, #1B5E20); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto; box-shadow: 0 8px 20px rgba(46,125,50,0.3);">
+                            <img src="jessa.jpg" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid #4CAF50;">
+                        </div>
+                    </div>
+                    <h4 style="color: #1B5E20; margin: 10px 0 5px;"><i class="fas fa-user-astronaut"></i> Jessa Marande Placencia</h4>
+                    <p style="font-size: 13px; line-height: 1.5; color: #2E5D2A;">Passionate developer with expertise in web development and educational technology. Creator of innovative solutions that bridge technology and education.</p>
+                    
+                    <h4 style="color: #1B5E20; margin: 15px 0 8px;"><i class="fas fa-code-branch"></i> Tech Stack</h4>
+                    <div>
+                        <span class="skill-tag"><i class="fab fa-js"></i> JavaScript</span>
+                        <span class="skill-tag"><i class="fab fa-html5"></i> HTML5/CSS3</span>
+                        <span class="skill-tag"><i class="fas fa-database"></i> Firebase</span>
+                        <span class="skill-tag"><i class="fab fa-google"></i> Gmail API</span>
+                        <span class="skill-tag"><i class="fas fa-mobile-alt"></i> Responsive Design</span>
+                    </div>
+                    
+                    <h4 style="color: #1B5E20; margin: 15px 0 8px;"><i class="fas fa-trophy"></i> Featured Projects</h4>
+                    <div style="margin-top: 8px;">
+                        <div style="background: #E8F5E9; border-radius: 12px; padding: 10px; margin-bottom: 10px;">
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 5px;">
+                                <i class="fas fa-bug" style="color: #D32F2F; font-size: 16px;"></i>
+                                <strong style="color: #1B5E20;">Dengue Awareness in the Philippines</strong>
+                                 <span style="font-size: 9px; background: #FF9800; color: white; padding: 2px 8px; border-radius: 20px;">Group Project</span>
+                            </div>
+                            <p style="font-size: 11px; color: #2E7D32; margin-left: 26px;">A comprehensive website raising awareness about dengue prevention, symptoms, and statistics across the Philippines.</p>
+                        </div>
+                        
+                        <div style="background: #E8F5E9; border-radius: 12px; padding: 10px; margin-bottom: 10px;">
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 5px;">
+                                <i class="fas fa-clinic-medical" style="color: #0288D1; font-size: 16px;"></i>
+                                <strong style="color: #1B5E20;">Student Clinic System</strong>
+                                <span style="font-size: 9px; background: #FF9800; color: white; padding: 2px 8px; border-radius: 20px;">Group Project</span>
+                            </div>
+                            <p style="font-size: 11px; color: #2E7D32; margin-left: 26px;">A collaborative project developed with my group mates that digitizes school clinic operations.</p>
+                        </div>
+                        
+                        <div style="background: #E8F5E9; border-radius: 12px; padding: 10px;">
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 5px;">
+                                <i class="fas fa-graduation-cap" style="color: #4CAF50; font-size: 16px;"></i>
+                                <strong style="color: #1B5E20;">GradeSync Pro</strong>
+                                <span style="font-size: 9px; background: #4CAF50; color: white; padding: 2px 8px; border-radius: 20px;">Solo Project</span>
+                            </div>
+                            <p style="font-size: 11px; color: #2E7D32; margin-left: 26px;">A comprehensive grade management system with Gmail integration, real-time synchronization.</p>
+                        </div>
+                    </div>
+                    
+                    <h4 style="color: #1B5E20; margin: 15px 0 8px;"><i class="fas fa-medal"></i> Skills & Expertise</h4>
+                    <ul style="font-size: 12px; color: #2E7D32; padding-left: 20px;">
+                        <li>✅ Front-end Development (HTML, CSS, JavaScript, React)</li>
+                        <li>✅ Back-end Development (Node.js, Firebase, Databases)</li>
+                        <li>✅ UI/UX Design & Prototyping</li>
+                        <li>✅ API Integration (Gmail API, RESTful services)</li>
+                        <li>✅ Team Collaboration & Project Management</li>
+                    </ul>
+                    
+                    <div class="social-links">
+                        <a href="#" target="_blank"><i class="fab fa-github"></i></a>
+                        <a href="#" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
+                        <a href="#" target="_blank"><i class="fas fa-envelope"></i></a>
+                    </div>
+                    <p style="text-align: center; font-size: 11px; margin-top: 12px; color: #81C784;">
+                        <i class="fas fa-heart"></i> Building technology that makes education better for everyone
+                    </p>
+                </div>
+            </div>
+
+            <!-- About Section -->
+            <div class="modern-card" style="margin-top: 20px;">
+                <div style="text-align: center; padding: 15px;">
+                    <div style="font-size: 32px; color: #1B5E20; margin-bottom: 10px;">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <h3 style="color: #1B5E20; margin-bottom: 10px; font-size: 18px;">About GradeSync Pro</h3>
+                    <p style="color: #2E7D32; font-size: 13px; line-height: 1.5;">
+                        A comprehensive grade management system designed for modern education. 
+                        Connect with Gmail for seamless communication and real-time grade synchronization.
+                    </p>
+                    <div style="border-top: 1px solid #C8E6C9; padding-top: 12px; margin-top: 12px;">
+                        <p style="color: #1B5E20; font-size: 11px;">Version 2.0 | 2026 | Gmail Integrated</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <i class="fab fa-google"></i> Gmail Connected • Real-time sync • <span id="liveStatus">Online</span>
+        </div>
+    </div>
+
+    <script>
+        // Initialize users array from localStorage
+        let users = [];
+        let gmailConnected = false;
+        let connectedEmail = '';
+        let resetCodes = {}; // Store reset codes temporarily
+        
+        try {
+            const storedUsers = localStorage.getItem('grade_sync_users');
+            users = storedUsers ? JSON.parse(storedUsers) : [];
+        } catch (e) {
+            console.error('Error loading users:', e);
+            users = [];
+        }
+        
+        let selectedRole = 'student';
+
+        // Loading screen functionality
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.getElementById('loadingScreen').classList.add('hidden');
+                document.getElementById('appContainer').classList.add('show');
+            }, 2500);
+        });
+
+        // Set initial role
+        function setRole(role) {
+            selectedRole = role;
+            document.getElementById('studentRoleBtn').classList.toggle('active', role === 'student');
+            document.getElementById('teacherRoleBtn').classList.toggle('active', role === 'teacher');
+        }
+
+        // Show error message
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.style.display = 'block';
+            errorDiv.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`;
+            
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // Show success message
+        function showSuccess(message) {
+            const successDiv = document.getElementById('successMessage');
+            successDiv.style.display = 'block';
+            successDiv.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+            
+            setTimeout(() => {
+                successDiv.style.display = 'none';
+            }, 3000);
+        }
+
+        // Simulate Gmail connection
+        function simulateGmailConnection() {
+            const btn = document.getElementById('gmailConnectBtn');
+            const originalText = btn.innerHTML;
+            
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loading-spinner"></span> Connecting to Gmail...';
+            
+            setTimeout(() => {
+                gmailConnected = true;
+                connectedEmail = 'user@gmail.com';
+                
+                // Update UI
+                document.getElementById('gmailStatusBadge').textContent = 'Connected';
+                document.getElementById('gmailStatusBadge').className = 'gmail-status-badge badge-connected';
+                document.getElementById('gmailEmail').textContent = connectedEmail;
+                document.getElementById('gmailBadge').className = 'gmail-badge gmail-connected';
+                document.getElementById('gmailBadge').innerHTML = '<i class="fab fa-google"></i> Gmail Connected';
+                
+                // Show contacts
+                document.getElementById('gmailContacts').classList.add('show');
+                
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fab fa-google"></i> Gmail Connected ✓';
+                
+                showSuccess('Gmail account connected successfully!');
+                
+                // Auto-fill login email
+                document.getElementById('loginEmail').value = connectedEmail;
+                
+                // Save connection status
+                localStorage.setItem('gmail_connected', 'true');
+                localStorage.setItem('gmail_email', connectedEmail);
+            }, 2000);
+        }
+
+        // Select contact from Gmail
+        function selectContact(email, name) {
+            document.getElementById('loginEmail').value = email;
+            showSuccess(`Selected contact: ${name} (${email})`);
+            
+            // Hide contacts after selection
+            setTimeout(() => {
+                document.getElementById('gmailContacts').classList.remove('show');
+            }, 2000);
+        }
+
+        // Check Gmail connection status
+        function checkGmailConnection() {
+            const savedConnection = localStorage.getItem('gmail_connected');
+            const savedEmail = localStorage.getItem('gmail_email');
+            
+            if (savedConnection === 'true' && savedEmail) {
+                gmailConnected = true;
+                connectedEmail = savedEmail;
+                
+                document.getElementById('gmailStatusBadge').textContent = 'Connected';
+                document.getElementById('gmailStatusBadge').className = 'gmail-status-badge badge-connected';
+                document.getElementById('gmailEmail').textContent = savedEmail;
+                document.getElementById('gmailBadge').className = 'gmail-badge gmail-connected';
+                document.getElementById('gmailBadge').innerHTML = '<i class="fab fa-google"></i> Gmail Connected';
+                document.getElementById('gmailConnectBtn').innerHTML = '<i class="fab fa-google"></i> Gmail Connected ✓';
+                document.getElementById('gmailConnectBtn').disabled = false;
+            }
+        }
+
+        // Validate password strength
+        function validatePassword(password) {
+            if (password.length < 8) {
+                return 'Password must be at least 8 characters long';
+            }
+            if (!/[A-Z]/.test(password)) {
+                return 'Password must contain at least one uppercase letter';
+            }
+            if (!/[a-z]/.test(password)) {
+                return 'Password must contain at least one lowercase letter';
+            }
+            if (!/[0-9]/.test(password)) {
+                return 'Password must contain at least one number';
+            }
+            return null;
+        }
+
+        // Check password strength
+        function checkPasswordStrength(password) {
+            let strength = 0;
+            if (password.length >= 8) strength++;
+            if (/[A-Z]/.test(password)) strength++;
+            if (/[a-z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[^A-Za-z0-9]/.test(password)) strength++;
+            
+            return strength;
+        }
+
+        // Update password strength indicator
+        function updatePasswordStrength(password) {
+            const strength = checkPasswordStrength(password);
+            const bar = document.getElementById('passwordStrengthBar');
+            if (bar) {
+                if (strength <= 2) {
+                    bar.className = 'password-strength-bar strength-weak';
+                } else if (strength <= 4) {
+                    bar.className = 'password-strength-bar strength-medium';
+                } else {
+                    bar.className = 'password-strength-bar strength-strong';
+                }
+            }
+            
+            // Also update reset form strength bar if exists
+            const resetBar = document.getElementById('resetPasswordStrengthBar');
+            if (resetBar) {
+                if (strength <= 2) {
+                    resetBar.className = 'password-strength-bar strength-weak';
+                } else if (strength <= 4) {
+                    resetBar.className = 'password-strength-bar strength-medium';
+                } else {
+                    resetBar.className = 'password-strength-bar strength-strong';
+                }
+            }
+        }
+
+        // Check if email is valid Gmail
+        function isValidGmail(email) {
+            return email.toLowerCase().endsWith('@gmail.com');
+        }
+
+        // Generate unique user ID
+        function generateUserId() {
+            return 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        }
+
+        // Generate unique dashboard ID
+        function generateDashboardId() {
+            return 'dash_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        }
+
+        // Generate invite code for teachers (unique per teacher)
+        function generateInviteCode(teacherId) {
+            const prefix = 'TCH';
+            const uniquePart = teacherId.substring(5, 11).toUpperCase().replace(/[^A-Z0-9]/g, '');
+            const randomPart = Math.random().toString(36).substring(2, 6).toUpperCase();
+            return `${prefix}-${uniquePart}${randomPart}`;
+        }
+
+        // Send email notification (simulated)
+        function sendEmailNotification(to, subject, message) {
+            console.log(`📧 Email sent to ${to}`);
+            console.log(`Subject: ${subject}`);
+            console.log(`Message: ${message}`);
+            
+            let sentEmails = JSON.parse(localStorage.getItem('sent_emails')) || [];
+            sentEmails.push({
+                to: to,
+                subject: subject,
+                message: message,
+                timestamp: new Date().toISOString()
+            });
+            localStorage.setItem('sent_emails', JSON.stringify(sentEmails));
+        }
+
+        // ========== FORGOT PASSWORD FUNCTIONS ==========
+        function showForgotPassword() {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('forgotPasswordForm').style.display = 'block';
+        }
+
+        function cancelForgotPassword() {
+            document.getElementById('forgotPasswordForm').style.display = 'none';
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('resetCodeSection').style.display = 'none';
+            document.getElementById('sendResetBtn').disabled = false;
+            document.getElementById('sendResetBtn').innerHTML = '<i class="fas fa-paper-plane"></i> Send Reset Code';
+        }
+
+        function sendResetCode() {
+            const email = document.getElementById('resetEmail').value.trim().toLowerCase();
+            
+            if (!email || !isValidGmail(email)) {
+                showError('Please enter a valid Gmail address');
+                return;
+            }
+            
+            const userExists = users.some(u => u.email.toLowerCase() === email);
+            if (!userExists) {
+                showError('No account found with this Gmail address');
+                return;
+            }
+            
+            const code = Math.floor(100000 + Math.random() * 900000).toString();
+            resetCodes[email] = {
+                code: code,
+                expiry: Date.now() + 600000
+            };
+            
+            console.log(`[DEMO] Reset code for ${email}: ${code}`);
+            
+            sendEmailNotification(
+                email,
+                'Password Reset Code - GradeSync Pro',
+                `Your password reset code is: ${code}\n\nThis code will expire in 10 minutes.\n\nIf you didn't request this, please ignore this email.`
+            );
+            
+            showSuccess(`Reset code sent to ${email} (Demo: ${code})`);
+            
+            document.getElementById('resetCodeSection').style.display = 'block';
+            document.getElementById('sendResetBtn').disabled = true;
+            document.getElementById('sendResetBtn').innerHTML = '<i class="fas fa-check"></i> Code Sent';
+        }
+
+        function completePasswordReset() {
+            const email = document.getElementById('resetEmail').value.trim().toLowerCase();
+            const codeInput = document.getElementById('resetCodeInput').value.trim();
+            const newPassword = document.getElementById('newPassword').value;
+            
+            if (!email || !codeInput || !newPassword) {
+                showError('Please fill in all fields');
+                return;
+            }
+            
+            const resetData = resetCodes[email];
+            if (!resetData || resetData.code !== codeInput) {
+                showError('Invalid verification code');
+                return;
+            }
+            
+            if (Date.now() > resetData.expiry) {
+                showError('Reset code has expired. Please request a new one.');
+                return;
+            }
+            
+            const passwordError = validatePassword(newPassword);
+            if (passwordError) {
+                showError(passwordError);
+                return;
+            }
+            
+            const userIndex = users.findIndex(u => u.email.toLowerCase() === email);
+            if (userIndex === -1) {
+                showError('User not found');
+                return;
+            }
+            
+            users[userIndex].password = btoa(newPassword);
+            localStorage.setItem('grade_sync_users', JSON.stringify(users));
+            
+            delete resetCodes[email];
+            
+            sendEmailNotification(
+                email,
+                'Password Reset Successful - GradeSync Pro',
+                'Your password has been successfully reset. You can now login with your new password.'
+            );
+            
+            showSuccess('Password reset successful! You can now login.');
+            
+            setTimeout(() => {
+                cancelForgotPassword();
+                document.getElementById('loginEmail').value = email;
+                document.getElementById('loginPassword').value = '';
+            }, 2000);
+        }
+
+        // ========== SIGNUP FUNCTIONS ==========
+        
+        // Student signup function
+        function studentSignup() {
+            // Get form values
+            const lastName = document.getElementById('studentLastName').value.trim();
+            const firstName = document.getElementById('studentFirstName').value.trim();
+            const gender = document.getElementById('studentGender').value;
+            const email = document.getElementById('studentEmail').value.trim().toLowerCase();
+            const password = document.getElementById('studentPassword').value;
+            const yearLevel = document.getElementById('collegeYear').value;
+            const section = document.getElementById('collegeSection').value.trim();
+            const academicYear = document.getElementById('collegeAcademicYear').value.trim();
+            const inviteCode = document.getElementById('teacherInviteCode')?.value.trim().toUpperCase();
+
+            // Validate required fields
+            if (!lastName || !firstName || !email || !password || !section || !academicYear) {
+                showError('Please fill in all required fields');
+                return;
+            }
+
+            // Validate Gmail
+            if (!isValidGmail(email)) {
+                showError('Please use a valid Gmail address');
+                return;
+            }
+
+            // Validate password
+            const passwordError = validatePassword(password);
+            if (passwordError) {
+                showError(passwordError);
+                return;
+            }
+
+            // Check if email already exists
+            const existingUser = users.find(u => u.email.toLowerCase() === email);
+            if (existingUser) {
+                showError('Gmail already registered');
+                return;
+            }
+
+            // Find teacher by invite code if provided
+            let teacherId = null;
+            let teacherEmail = null;
+            if (inviteCode) {
+                const teacher = users.find(u => u.role === 'teacher' && u.inviteCode === inviteCode);
+                if (teacher) {
+                    teacherId = teacher.id;
+                    teacherEmail = teacher.email;
+                } else {
+                    showError('Invalid invite code. Please check with your teacher.');
+                    return;
+                }
+            }
+
+            // Generate unique IDs
+            const userId = generateUserId();
+            const dashboardId = generateDashboardId();
+            
+            // Create full name
+            const fullName = `${lastName}, ${firstName}`;
+            
+            // Create user data structure
+            const user = {
+                id: userId,
+                dashboardId: dashboardId,
+                email: email,
+                fullName: fullName,
+                lastName: lastName,
+                firstName: firstName,
+                gender: gender,
+                username: email.split('@')[0],
+                password: btoa(password),
+                role: 'student',
+                educationalLevel: 'college',
+                yearLevel: yearLevel,
+                section: section,
+                academicYear: academicYear,
+                teacherId: teacherId,
+                gmailConnected: gmailConnected,
+                gmailEmail: connectedEmail,
+                createdAt: new Date().toISOString(),
+                lastLogin: null,
+                
+                storageKeys: {
+                    grades: `grades_${dashboardId}`,
+                    activity: `activity_${dashboardId}`,
+                    settings: `settings_${dashboardId}`,
+                    notifications: `notifications_${dashboardId}`
+                }
+            };
+
+            // Add to users array
+            users.push(user);
+            
+            // Save to localStorage
+            try {
+                localStorage.setItem('grade_sync_users', JSON.stringify(users));
+                
+                // Initialize isolated storage
+                localStorage.setItem(user.storageKeys.grades, JSON.stringify([]));
+                localStorage.setItem(user.storageKeys.activity, JSON.stringify([]));
+                localStorage.setItem(user.storageKeys.settings, JSON.stringify({
+                    theme: 'green',
+                    educationalLevel: 'college',
+                    yearLevel: yearLevel,
+                    section: section,
+                    academicYear: academicYear,
+                    gmailConnected: gmailConnected,
+                    gmailEmail: connectedEmail,
+                    createdAt: new Date().toISOString()
+                }));
+                
+                // Initialize notifications
+                const notifications = [{
+                    id: Date.now(),
+                    type: 'welcome',
+                    message: `Welcome to GradeSync Pro! Academic Year ${academicYear}`,
+                    timestamp: new Date().toISOString(),
+                    read: false
+                }];
+
+                if (gmailConnected) {
+                    notifications.push({
+                        id: Date.now() + 1,
+                        type: 'gmail',
+                        message: `Gmail account ${connectedEmail} connected successfully!`,
+                        timestamp: new Date().toISOString(),
+                        read: false
+                    });
+                    
+                    sendEmailNotification(
+                        email,
+                        'Welcome to GradeSync Pro!',
+                        `Hello ${firstName},\n\nYour GradeSync Pro account has been created successfully!\n\nAcademic Year: ${academicYear}\nSection: ${section}\n\nBest regards,\nGradeSync Pro Team`
+                    );
+                }
+
+                if (teacherId) {
+                    const teacher = users.find(u => u.id === teacherId);
+                    notifications.push({
+                        id: Date.now() + 2,
+                        type: 'connection',
+                        message: `Connected to teacher ${teacher?.name || teacher?.username || 'your teacher'}`,
+                        timestamp: new Date().toISOString(),
+                        read: false
+                    });
+                    
+                    if (teacherEmail) {
+                        sendEmailNotification(
+                            teacherEmail,
+                            'New Student Connected',
+                            `A new student has connected to you:\n\nName: ${fullName}\nEmail: ${email}\nSection: ${section}\n\nGradeSync Pro`
+                        );
+                    }
+                }
+                
+                localStorage.setItem(user.storageKeys.notifications, JSON.stringify(notifications));
+                
+                if (teacherId) {
+                    const teacher = users.find(u => u.id === teacherId);
+                    if (teacher) {
+                        let teacherStudents = JSON.parse(localStorage.getItem(teacher.storageKeys.students)) || [];
+                        
+                        const existingStudent = teacherStudents.find(s => s.email.toLowerCase() === email);
+                        if (!existingStudent) {
+                            teacherStudents.push({
+                                id: userId,
+                                email: email,
+                                fullName: fullName,
+                                lastName: lastName,
+                                firstName: firstName,
+                                gender: gender,
+                                section: section,
+                                yearLevel: yearLevel,
+                                educationalLevel: 'college',
+                                gmailConnected: gmailConnected,
+                                dateAdded: new Date().toISOString()
+                            });
+                            localStorage.setItem(teacher.storageKeys.students, JSON.stringify(teacherStudents));
+                        }
+                        
+                        let teacherNotifications = JSON.parse(localStorage.getItem(teacher.storageKeys.notifications)) || [];
+                        teacherNotifications.push({
+                            id: Date.now(),
+                            type: 'student_joined',
+                            message: `${fullName} (${email}) has joined and connected to you`,
+                            timestamp: new Date().toISOString(),
+                            read: false
+                        });
+                        localStorage.setItem(teacher.storageKeys.notifications, JSON.stringify(teacherNotifications));
+                    }
+                }
+                
+                const message = teacherId ? 
+                    'Account created! You are automatically connected to your teacher.' : 
+                    'Account created successfully! You can now login.';
+                
+                showSuccess(message);
+                
+                setTimeout(() => {
+                    location.reload();
+                }, 2000);
+                
+            } catch (e) {
+                console.error('Error saving user:', e);
+                showError('Error creating account. Please try again.');
+            }
+        }
+
+        // Teacher signup function
+        function teacherSignup() {
+            // Get form values
+            const username = document.getElementById('teacherUsername').value.trim();
+            const email = document.getElementById('teacherEmail').value.trim().toLowerCase();
+            const password = document.getElementById('teacherPassword').value;
+            const school = document.getElementById('teacherSchool').value.trim();
+            const academicYear = document.getElementById('teacherAcademicYear').value.trim();
+
+            // Validate required fields
+            if (!username || !email || !password || !school || !academicYear) {
+                showError('Please fill in all fields');
+                return;
+            }
+
+            // Validate Gmail
+            if (!isValidGmail(email)) {
+                showError('Please use a valid Gmail address');
+                return;
+            }
+
+            // Validate password
+            const passwordError = validatePassword(password);
+            if (passwordError) {
+                showError(passwordError);
+                return;
+            }
+
+            // Check if email already exists
+            const existingUser = users.find(u => u.email.toLowerCase() === email);
+            if (existingUser) {
+                showError('Gmail already registered');
+                return;
+            }
+
+            // Generate unique IDs
+            const userId = generateUserId();
+            const dashboardId = generateDashboardId();
+            
+            // Generate invite code
+            const inviteCode = generateInviteCode(userId);
+            
+            // Create user data structure
+            const user = {
+                id: userId,
+                dashboardId: dashboardId,
+                name: username,
+                email: email,
+                username: username,
+                password: btoa(password),
+                role: 'teacher',
+                educationalLevel: 'college',
+                school: school,
+                academicYear: academicYear,
+                inviteCode: inviteCode,
+                gmailConnected: gmailConnected,
+                gmailEmail: connectedEmail,
+                createdAt: new Date().toISOString(),
+                lastLogin: null,
+                
+                storageKeys: {
+                    students: `students_${dashboardId}`,
+                    grades: `grades_${dashboardId}`,
+                    activity: `activity_${dashboardId}`,
+                    settings: `settings_${dashboardId}`,
+                    notifications: `notifications_${dashboardId}`,
+                    classes: `classes_${dashboardId}`
+                }
+            };
+
+            // Add to users array
+            users.push(user);
+            
+            // Save to localStorage
+            try {
+                localStorage.setItem('grade_sync_users', JSON.stringify(users));
+                
+                // Initialize isolated storage
+                localStorage.setItem(user.storageKeys.students, JSON.stringify([]));
+                localStorage.setItem(user.storageKeys.grades, JSON.stringify([]));
+                localStorage.setItem(user.storageKeys.activity, JSON.stringify([]));
+                localStorage.setItem(user.storageKeys.settings, JSON.stringify({
+                    theme: 'green',
+                    educationalLevel: 'college',
+                    school: school,
+                    academicYear: academicYear,
+                    gmailConnected: gmailConnected,
+                    gmailEmail: connectedEmail,
+                    createdAt: new Date().toISOString()
+                }));
+                
+                const notifications = [{
+                    id: Date.now(),
+                    type: 'welcome',
+                    message: `Welcome to GradeSync Pro! Your invite code is: ${inviteCode}. Share this with your students!`,
+                    timestamp: new Date().toISOString(),
+                    read: false
+                }];
+                
+                if (gmailConnected) {
+                    notifications.push({
+                        id: Date.now() + 1,
+                        type: 'gmail',
+                        message: `Gmail account ${connectedEmail} connected successfully!`,
+                        timestamp: new Date().toISOString(),
+                        read: false
+                    });
+                    
+                    sendEmailNotification(
+                        email,
+                        'Welcome to GradeSync Pro - Teacher Account',
+                        `Hello ${username},\n\nYour GradeSync Pro teacher account has been created successfully!\n\nInvite Code: ${inviteCode}\nSchool: ${school}\nAcademic Year: ${academicYear}\n\nShare your invite code with students to connect!\n\nBest regards,\nGradeSync Pro Team`
+                    );
+                }
+                
+                localStorage.setItem(user.storageKeys.notifications, JSON.stringify(notifications));
+                localStorage.setItem(user.storageKeys.classes, JSON.stringify([]));
+                
+                showSuccess(`Teacher account created! Your invite code is: ${inviteCode}`);
+                
+                setTimeout(() => {
+                    location.reload();
+                }, 3000);
+                
+            } catch (e) {
+                console.error('Error saving teacher:', e);
+                showError('Error creating account. Please try again.');
+            }
+        }
+
+        // Show signup form based on selected role
+        function showSignup() {
+            const loginForm = document.getElementById('loginForm');
+            
+            if (selectedRole === 'student') {
+                loginForm.innerHTML = `
+                    <h3 style="color: #1B5E20; margin-bottom: 20px;"><i class="fas fa-user-graduate"></i> Student Registration</h3>
+                    
+                    <div class="invite-code-hint">
+                        <i class="fas fa-info-circle fa-lg"></i>
+                        <span>Ask your teacher for their invite code to automatically connect!</span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-user"></i> Last Name</label>
+                        <input type="text" class="form-input" id="studentLastName" placeholder="Enter your last name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-user"></i> First Name</label>
+                        <input type="text" class="form-input" id="studentFirstName" placeholder="Enter your first name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-venus-mars"></i> Gender</label>
+                        <select class="form-select" id="studentGender">
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                            <option value="prefer-not-to-say">Prefer not to say</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label"><i class="fab fa-google"></i> Gmail Address</label>
+                        <input type="email" class="form-input gmail-input" id="studentEmail" placeholder="your.name@gmail.com" pattern=".+@gmail\\.com" value="${connectedEmail || ''}">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-lock"></i> Password</label>
+                        <input type="password" class="form-input" id="studentPassword" placeholder="Create a strong password" onkeyup="updatePasswordStrength(this.value)">
+                        <div class="password-strength">
+                            <div class="password-strength-bar" id="passwordStrengthBar"></div>
+                        </div>
+                        <div class="gmail-note">
+                            <i class="fas fa-info-circle"></i> Min 8 chars, with uppercase, lowercase & number
+                        </div>
+                    </div>
+                    
+                    <!-- College Fields Only -->
+                    <div class="college-fields">
+                        <div class="form-group">
+                            <label class="form-label"><i class="fas fa-layer-group"></i> Year Level</label>
+                            <select class="form-select" id="collegeYear">
+                                <option value="1st Year">1st Year</option>
+                                <option value="2nd Year">2nd Year</option>
+                                <option value="3rd Year">3rd Year</option>
+                                <option value="4th Year">4th Year</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label"><i class="fas fa-hashtag"></i> Section</label>
+                            <input type="text" class="form-input" id="collegeSection" placeholder="e.g., IT-101, CS-201">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label"><i class="fas fa-calendar"></i> Academic Year</label>
+                            <input type="text" class="form-input" id="collegeAcademicYear" placeholder="e.g., 2025-2026" value="2025-2026">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-key"></i> Teacher Invite Code (Optional)</label>
+                        <input type="text" class="form-input" id="teacherInviteCode" placeholder="e.g., TCH-ABC123">
+                    </div>
+                    
+                    <div class="gmail-note">
+                        <i class="fas fa-check-circle" style="color: #34A853;"></i>
+                        Gmail: ${gmailConnected ? 'Connected as ' + connectedEmail : 'Not connected'}
+                    </div>
+                    
+                    <button class="btn-primary" onclick="studentSignup()">
+                        <i class="fas fa-user-plus"></i> Create Student Account
+                    </button>
+                    <button class="btn-secondary" style="margin-top: 10px;" onclick="location.reload()">
+                        <i class="fas fa-arrow-left"></i> Back to Login
+                    </button>
+                `;
+            } else {
+                loginForm.innerHTML = `
+                    <h3 style="color: #1B5E20; margin-bottom: 20px;"><i class="fas fa-chalkboard-teacher"></i> Teacher Registration</h3>
+                    
+                    <div class="invite-code-hint">
+                        <i class="fas fa-info-circle fa-lg"></i>
+                        <span>After registration, you'll get an invite code to share with your students!</span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-user"></i> Username</label>
+                        <input type="text" class="form-input" id="teacherUsername" placeholder="Enter your username">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label"><i class="fab fa-google"></i> Gmail Address</label>
+                        <input type="email" class="form-input gmail-input" id="teacherEmail" placeholder="teacher.name@gmail.com" pattern=".+@gmail\\.com" value="${connectedEmail || ''}">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-lock"></i> Password</label>
+                        <input type="password" class="form-input" id="teacherPassword" placeholder="Create a strong password" onkeyup="updatePasswordStrength(this.value)">
+                        <div class="password-strength">
+                            <div class="password-strength-bar" id="passwordStrengthBar"></div>
+                        </div>
+                        <div class="gmail-note">
+                            <i class="fas fa-info-circle"></i> Min 8 chars, with uppercase, lowercase & number
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-school"></i> School/Institution</label>
+                        <input type="text" class="form-input" id="teacherSchool" placeholder="Enter your school name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-calendar"></i> Academic Year</label>
+                        <input type="text" class="form-input" id="teacherAcademicYear" placeholder="e.g., 2025-2026" value="2025-2026">
+                    </div>
+                    
+                    <div class="gmail-note">
+                        <i class="fas fa-check-circle" style="color: #34A853;"></i>
+                        Gmail: ${gmailConnected ? 'Connected as ' + connectedEmail : 'Not connected'}
+                    </div>
+                    
+                    <button class="btn-primary" onclick="teacherSignup()">
+                        <i class="fas fa-user-plus"></i> Create Teacher Account
+                    </button>
+                    <button class="btn-secondary" style="margin-top: 10px;" onclick="location.reload()">
+                        <i class="fas fa-arrow-left"></i> Back to Login
+                    </button>
+                `;
+            }
+        }
+
+        // Login function
+        function login() {
+            const loginBtn = document.getElementById('loginBtn');
+            loginBtn.disabled = true;
+            loginBtn.innerHTML = '<span class="loading-spinner"></span> Logging in...';
+            
+            const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+            const password = document.getElementById('loginPassword').value;
+
+            if (!email || !password) {
+                showError('Please enter your Gmail and password');
+                loginBtn.disabled = false;
+                loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login with Gmail';
+                return;
+            }
+
+            if (!isValidGmail(email)) {
+                showError('Please use a valid Gmail address');
+                loginBtn.disabled = false;
+                loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login with Gmail';
+                return;
+            }
+
+            try {
+                users = JSON.parse(localStorage.getItem('grade_sync_users')) || [];
+            } catch (e) {
+                console.error('Error loading users:', e);
+                users = [];
+            }
+
+            let user = null;
+            for (let u of users) {
+                if (u.email.toLowerCase() === email) {
+                    try {
+                        const decodedPassword = atob(u.password);
+                        if (decodedPassword === password) {
+                            user = u;
+                            break;
+                        }
+                    } catch (e) {
+                        console.error('Error decoding password:', e);
+                        if (u.password === password) {
+                            user = u;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (!user) {
+                showError('Invalid Gmail or password');
+                loginBtn.disabled = false;
+                loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login with Gmail';
+                return;
+            }
+
+            user.lastLogin = new Date().toISOString();
+            
+            try {
+                localStorage.setItem('grade_sync_users', JSON.stringify(users));
+            } catch (e) {
+                console.error('Error saving user data:', e);
+            }
+
+            const sessionToken = btoa(user.id + ':' + Date.now() + ':' + Math.random());
+            
+            const sessionData = {
+                id: user.id,
+                email: user.email,
+                name: user.name || user.fullName || user.username || user.email.split('@')[0],
+                fullName: user.fullName,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                gender: user.gender,
+                username: user.username,
+                role: user.role,
+                educationalLevel: user.educationalLevel || 'college',
+                yearLevel: user.yearLevel,
+                section: user.section,
+                school: user.school,
+                academicYear: user.academicYear,
+                inviteCode: user.inviteCode,
+                dashboardId: user.dashboardId,
+                storageKeys: user.storageKeys,
+                teacherId: user.teacherId || null,
+                gmailConnected: user.gmailConnected || false,
+                gmailEmail: user.gmailEmail || null,
+                sessionToken: sessionToken,
+                loginTime: new Date().toISOString()
+            };
+
+            try {
+                localStorage.setItem('currentSession', JSON.stringify(sessionData));
+            } catch (e) {
+                console.error('Error saving session:', e);
+                showError('Error creating session. Please try again.');
+                loginBtn.disabled = false;
+                loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login with Gmail';
+                return;
+            }
+
+            try {
+                const activity = JSON.parse(localStorage.getItem(user.storageKeys.activity)) || [];
+                activity.push({
+                    type: 'login',
+                    timestamp: new Date().toISOString()
+                });
+                localStorage.setItem(user.storageKeys.activity, JSON.stringify(activity));
+            } catch (e) {
+                console.error('Error logging activity:', e);
+            }
+
+            showSuccess('Login successful! Redirecting...');
+
+            setTimeout(() => {
+                if (user.role === 'student') {
+                    window.location.href = 'student-dashboard-unique.html';
+                } else {
+                    window.location.href = 'teacher-dashboard-unique.html';
+                }
+            }, 1000);
+        }
+
+        // Create test accounts
+        function createTestAccounts() {
+            if (users.length === 0) {
+                // Test student
+                const studentId = generateUserId();
+                const studentDashboardId = generateDashboardId();
+                
+                const testStudent = {
+                    id: studentId,
+                    dashboardId: studentDashboardId,
+                    email: 'student@gmail.com',
+                    fullName: 'Test, Student',
+                    lastName: 'Test',
+                    firstName: 'Student',
+                    gender: 'prefer-not-to-say',
+                    username: 'student',
+                    password: btoa('Password123'),
+                    role: 'student',
+                    educationalLevel: 'college',
+                    yearLevel: '1st Year',
+                    section: 'IT-101',
+                    academicYear: '2025-2026',
+                    gmailConnected: false,
+                    gmailEmail: null,
+                    createdAt: new Date().toISOString(),
+                    lastLogin: null,
+                    teacherId: null,
+                    storageKeys: {
+                        grades: `grades_${studentDashboardId}`,
+                        activity: `activity_${studentDashboardId}`,
+                        settings: `settings_${studentDashboardId}`,
+                        notifications: `notifications_${studentDashboardId}`
+                    }
+                };
+                
+                // Test teacher
+                const teacherId = generateUserId();
+                const teacherDashboardId = generateDashboardId();
+                const teacherInviteCode = generateInviteCode(teacherId);
+                
+                const testTeacher = {
+                    id: teacherId,
+                    dashboardId: teacherDashboardId,
+                    email: 'teacher@gmail.com',
+                    name: 'Test Teacher',
+                    username: 'teacher',
+                    password: btoa('Password123'),
+                    role: 'teacher',
+                    educationalLevel: 'college',
+                    school: 'Test University',
+                    academicYear: '2025-2026',
+                    inviteCode: teacherInviteCode,
+                    gmailConnected: false,
+                    gmailEmail: null,
+                    createdAt: new Date().toISOString(),
+                    lastLogin: null,
+                    storageKeys: {
+                        students: `students_${teacherDashboardId}`,
+                        grades: `grades_${teacherDashboardId}`,
+                        activity: `activity_${teacherDashboardId}`,
+                        settings: `settings_${teacherDashboardId}`,
+                        notifications: `notifications_${teacherDashboardId}`,
+                        classes: `classes_${teacherDashboardId}`
+                    }
+                };
+                
+                users.push(testStudent, testTeacher);
+                localStorage.setItem('grade_sync_users', JSON.stringify(users));
+                
+                // Initialize student storage
+                localStorage.setItem(testStudent.storageKeys.grades, JSON.stringify([]));
+                localStorage.setItem(testStudent.storageKeys.activity, JSON.stringify([]));
+                localStorage.setItem(testStudent.storageKeys.settings, JSON.stringify({
+                    theme: 'green',
+                    educationalLevel: 'college',
+                    yearLevel: '1st Year',
+                    section: 'IT-101',
+                    academicYear: '2025-2026',
+                    gmailConnected: false,
+                    gmailEmail: null,
+                    createdAt: new Date().toISOString()
+                }));
+                localStorage.setItem(testStudent.storageKeys.notifications, JSON.stringify([{
+                    id: Date.now(),
+                    type: 'welcome',
+                    message: 'Welcome to GradeSync Pro!',
+                    timestamp: new Date().toISOString(),
+                    read: false
+                }]));
+                
+                // Initialize teacher storage
+                localStorage.setItem(testTeacher.storageKeys.students, JSON.stringify([]));
+                localStorage.setItem(testTeacher.storageKeys.grades, JSON.stringify([]));
+                localStorage.setItem(testTeacher.storageKeys.activity, JSON.stringify([]));
+                localStorage.setItem(testTeacher.storageKeys.settings, JSON.stringify({
+                    theme: 'green',
+                    educationalLevel: 'college',
+                    school: 'Test University',
+                    academicYear: '2025-2026',
+                    gmailConnected: false,
+                    gmailEmail: null,
+                    createdAt: new Date().toISOString()
+                }));
+                localStorage.setItem(testTeacher.storageKeys.notifications, JSON.stringify([{
+                    id: Date.now(),
+                    type: 'welcome',
+                    message: `Welcome! Your invite code is: ${teacherInviteCode}. Share this with your students!`,
+                    timestamp: new Date().toISOString(),
+                    read: false 
+                }]));
+                localStorage.setItem(testTeacher.storageKeys.classes, JSON.stringify([]));
+                
+                console.log('Test accounts created!');
+                console.log('Student: student@gmail.com / Password123');
+                console.log('Teacher: teacher@gmail.com / Password123');
+                console.log('Teacher Invite Code:', teacherInviteCode);
+            }
+        }
+
+        // Toggle Portfolio function
+        function togglePortfolio() {
+            const details = document.getElementById('portfolioDetails');
+            if (details.classList.contains('open')) {
+                details.classList.remove('open');
+            } else {
+                details.classList.add('open');
+            }
+        }
+
+        createTestAccounts();
+        checkGmailConnection();
+    </script>
+</body>
+</html>

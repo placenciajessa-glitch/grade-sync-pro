@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>View Students - GradeSync Pro (College)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(145deg, #0B3B2A 0%, #1A4F3A 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 12px;
+        }
+
+        .app-container {
+            max-width: 420px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border-radius: 48px;
+            box-shadow: 0 30px 60px rgba(0, 100, 0, 0.4);
+            overflow: hidden;
+            border: 2px solid #2E7D32;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1B5E20 0%, #2E7D32 100%);
+            padding: 20px 24px;
+            position: relative;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .app-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #FFFFFF 0%, #E8F5E9 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: #1B5E20;
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .logo-text span {
+            color: #C8E6C9;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 30px;
+            color: white;
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+
+        .header h1 {
+            color: white;
+            font-size: 24px;
+            margin-top: 5px;
+        }
+
+        .header p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 14px;
+        }
+
+        .content {
+            padding: 20px;
+            background: #F1F8E9;
+            min-height: 600px;
+        }
+
+        .modern-card {
+            background: white;
+            border-radius: 32px;
+            padding: 20px;
+            box-shadow: 0 15px 30px rgba(46, 125, 50, 0.15);
+            border: 2px solid #A5D6A7;
+        }
+
+        .search-section {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 14px 18px;
+            border: 2px solid #C8E6C9;
+            border-radius: 20px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #2E7D32;
+            box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
+        }
+
+        .search-btn {
+            width: 50px;
+            height: 50px;
+            background: #2E7D32;
+            border: none;
+            border-radius: 16px;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .search-btn:hover {
+            background: #1B5E20;
+            transform: scale(1.05);
+        }
+
+        .connection-filter {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .connection-btn {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #C8E6C9;
+            border-radius: 16px;
+            background: white;
+            color: #2E7D32;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .connection-btn.active {
+            background: #2E7D32;
+            color: white;
+            border-color: #1B5E20;
+        }
+
+        .connection-btn:hover {
+            border-color: #2E7D32;
+        }
+
+        .student-list {
+            max-height: 450px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .student-list::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .student-list::-webkit-scrollbar-track {
+            background: #E8F5E9;
+            border-radius: 10px;
+        }
+
+        .student-list::-webkit-scrollbar-thumb {
+            background: #2E7D32;
+            border-radius: 10px;
+        }
+
+        .student-card {
+            background: white;
+            border-radius: 20px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border: 2px solid #C8E6C9;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .student-card:hover {
+            border-color: #2E7D32;
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(46, 125, 50, 0.1);
+        }
+
+        .student-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .student-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1B5E20;
+        }
+
+        .student-level-badge {
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: 600;
+            background: #E3F2FD;
+            color: #1976D2;
+        }
+
+        .student-details {
+            display: flex;
+            gap: 15px;
+            margin: 10px 0;
+            font-size: 12px;
+            color: #2E7D32;
+            flex-wrap: wrap;
+        }
+
+        .student-details span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .connection-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .status-connected {
+            background: #A5D6A7;
+            color: #1B5E20;
+        }
+
+        .status-pending {
+            background: #FFE0B2;
+            color: #E65100;
+        }
+
+        .student-stats {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #C8E6C9;
+        }
+
+        .stat-item {
+            flex: 1;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-weight: 700;
+            color: #1B5E20;
+            font-size: 18px;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #2E7D32;
+        }
+
+        .expanded-details {
+            margin-top: 15px;
+            padding: 15px;
+            background: #F1F8E9;
+            border-radius: 16px;
+            display: none;
+            border: 2px solid #A5D6A7;
+        }
+
+        .expanded-details.show {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .grade-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #C8E6C9;
+        }
+
+        .grade-item:last-child {
+            border-bottom: none;
+        }
+
+        .grade-subject {
+            font-weight: 600;
+            color: #1B5E20;
+            font-size: 13px;
+        }
+
+        .grade-details {
+            display: flex;
+            gap: 15px;
+            font-size: 12px;
+            color: #2E7D32;
+        }
+
+        .grade-average {
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: #E8F5E9;
+            color: #2E7D32;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .grade-pass {
+            color: #2E7D32;
+            font-weight: 600;
+        }
+
+        .grade-fail {
+            color: #C62828;
+            font-weight: 600;
+        }
+
+        .btn-view-grades {
+            width: 100%;
+            padding: 12px;
+            background: #2E7D32;
+            color: white;
+            border: none;
+            border-radius: 16px;
+            margin-top: 15px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .btn-view-grades:hover {
+            background: #1B5E20;
+            transform: scale(0.98);
+        }
+
+        .footer {
+            background: white;
+            padding: 15px;
+            text-align: center;
+            color: #2E7D32;
+            font-size: 12px;
+            border-top: 2px solid #A5D6A7;
+        }
+
+        .student-count {
+            margin-top: 15px;
+            text-align: right;
+            font-weight: 600;
+            color: #2E7D32;
+            font-size: 13px;
+            padding: 0 5px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #2E7D32;
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 15px;
+            color: #A5D6A7;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 3px solid #E8F5E9;
+            border-radius: 50%;
+            border-top-color: #2E7D32;
+            animation: spin 1s ease-in-out infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .info-box {
+            background: #E3F2FD;
+            border: 2px solid #1976D2;
+            border-radius: 16px;
+            padding: 12px;
+            margin-bottom: 20px;
+            color: #1976D2;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toast-message {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2E7D32;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 500;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            z-index: 2000;
+            animation: toastSlideDown 0.3s ease;
+        }
+
+        @keyframes toastSlideDown {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -20px);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <div class="header">
+            <div class="header-top">
+                <div class="app-logo">
+                    <div class="logo-icon"><i class="fas fa-users"></i></div>
+                    <div class="logo-text">View<span>Students</span></div>
+                </div>
+                <a href="teacher-dashboard-unique.html" class="back-btn">
+                    <i class="fas fa-arrow-left"></i> Back
+                </a>
+            </div>
+            <h1>My Students</h1>
+            <p>Manage and view student progress (College)</p>
+        </div>
+        
+        <div class="content">
+            <div class="modern-card">
+                <div class="info-box">
+                    <i class="fas fa-info-circle"></i>
+                    <span>Connected students automatically receive grades in their dashboard</span>
+                </div>
+
+                <div class="search-section">
+                    <input type="text" class="search-input" id="searchInput" placeholder="Search by name, email, or section..." onkeyup="searchStudents()">
+                    <button class="search-btn" onclick="searchStudents()"><i class="fas fa-search"></i></button>
+                </div>
+
+                <div class="connection-filter">
+                    <button class="connection-btn active" onclick="filterByConnection('all')" id="connAll">
+                        All Students
+                    </button>
+                    <button class="connection-btn" onclick="filterByConnection('connected')" id="connConnected">
+                        <i class="fas fa-check-circle"></i> Connected
+                    </button>
+                    <button class="connection-btn" onclick="filterByConnection('pending')" id="connPending">
+                        <i class="fas fa-clock"></i> Pending
+                    </button>
+                </div>
+
+                <div id="loadingSpinner" class="loading-spinner" style="display: none;"></div>
+
+                <div class="student-list" id="studentList">
+                </div>
+
+                <div class="student-count" id="studentCount"></div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <i class="fas fa-users"></i> Total Students: <span id="totalStudentsCount">0</span> • 
+            <i class="fas fa-check-circle" style="color: #2E7D32;"></i> <span id="connectedCount">0</span> Connected
+        </div>
+    </div>
+
+    <script>
+        const session = JSON.parse(localStorage.getItem('currentSession'));
+        
+        if (!session || session.role !== 'teacher') {
+            window.location.href = 'index.html';
+        }
+
+        const allUsers = JSON.parse(localStorage.getItem('grade_sync_users')) || [];
+
+        let allStudents = [];
+        let allGrades = [];
+        let connectionFilter = 'all';
+        let searchTerm = '';
+
+        function showToast(message, isSuccess = true) {
+            const toast = document.createElement('div');
+            toast.className = 'toast-message';
+            toast.style.background = isSuccess ? '#2E7D32' : '#C62828';
+            toast.innerHTML = `<i class="fas fa-${isSuccess ? 'check-circle' : 'exclamation-circle'}"></i> ${message}`;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
+        function loadTeacherData() {
+            try {
+                allStudents = JSON.parse(localStorage.getItem(session.storageKeys.students)) || [];
+                allGrades = JSON.parse(localStorage.getItem(session.storageKeys.grades)) || [];
+                console.log('Loaded students:', allStudents.length);
+                console.log('Loaded grades:', allGrades.length);
+            } catch (e) {
+                console.error('Error loading teacher data:', e);
+                allStudents = [];
+                allGrades = [];
+            }
+        }
+
+        function isStudentConnected(studentEmail) {
+            if (!studentEmail) return false;
+            return allUsers.some(u => 
+                u.role === 'student' && 
+                u.email && 
+                u.email.toLowerCase() === studentEmail.toLowerCase() &&
+                u.teacherId === session.id
+            );
+        }
+
+        function getStudentUser(studentEmail) {
+            if (!studentEmail) return null;
+            return allUsers.find(u => 
+                u.role === 'student' && 
+                u.email && 
+                u.email.toLowerCase() === studentEmail.toLowerCase()
+            );
+        }
+
+        function getStudentAverage(studentId) {
+            const studentGrades = allGrades.filter(g => g.studentId === studentId);
+            if (studentGrades.length === 0) return null;
+            
+            let total = 0;
+            studentGrades.forEach(g => {
+                const avg = (g.prelim + g.midterm + g.final) / 3;
+                total += avg;
+            });
+            return (total / studentGrades.length).toFixed(2);
+        }
+
+        function getPassingCount(studentId) {
+            const studentGrades = allGrades.filter(g => g.studentId === studentId);
+            let passed = 0;
+            studentGrades.forEach(g => {
+                const avg = (g.prelim + g.midterm + g.final) / 3;
+                if (avg <= 3.0 && avg >= 1.0) passed++;
+            });
+            return passed;
+        }
+
+        function getStudentGradesHTML(studentId) {
+            const studentGrades = allGrades.filter(g => g.studentId === studentId).slice(-5);
+            if (studentGrades.length === 0) {
+                return '<p style="color: #2E7D32; text-align: center; padding: 10px;">No grades yet</p>';
+            }
+            
+            let html = '';
+            studentGrades.forEach(g => {
+                const prelimDisplay = parseFloat(g.prelim).toFixed(1);
+                const midtermDisplay = parseFloat(g.midterm).toFixed(1);
+                const finalDisplay = parseFloat(g.final).toFixed(1);
+                
+                const avg = (parseFloat(g.prelim) + parseFloat(g.midterm) + parseFloat(g.final)) / 3;
+                const collegeGrade = avg.toFixed(2);
+                const passed = avg <= 3.0;
+                const statusClass = passed ? 'grade-pass' : 'grade-fail';
+                const statusIcon = passed ? '✓' : '✗';
+
+                html += `
+                    <div class="grade-item">
+                        <span class="grade-subject">${escapeHtml(g.subject)}</span>
+                        <div class="grade-details">
+                            <span>P:${prelimDisplay}</span>
+                            <span>M:${midtermDisplay}</span>
+                            <span>F:${finalDisplay}</span>
+                            <span class="${statusClass}">
+                                ${collegeGrade} ${statusIcon}
+                            </span>
+                        </div>
+                    </div>
+                `;
+            });
+            return html;
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            return text.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+
+        function displayStudents() {
+            const container = document.getElementById('studentList');
+            const countDisplay = document.getElementById('studentCount');
+            const totalSpan = document.getElementById('totalStudentsCount');
+            const connectedSpan = document.getElementById('connectedCount');
+            
+            document.getElementById('loadingSpinner').style.display = 'block';
+            container.innerHTML = '';
+
+            setTimeout(() => {
+                let filteredStudents = [...allStudents];
+                
+                if (connectionFilter !== 'all') {
+                    filteredStudents = filteredStudents.filter(s => {
+                        const connected = isStudentConnected(s.email);
+                        return connectionFilter === 'connected' ? connected : !connected;
+                    });
+                }
+                
+                if (searchTerm) {
+                    filteredStudents = filteredStudents.filter(s => {
+                        const fullName = (s.fullName || `${s.lastName || ''} ${s.firstName || ''}`).toLowerCase();
+                        const email = (s.email || '').toLowerCase();
+                        const section = (s.section || '').toLowerCase();
+                        
+                        return fullName.includes(searchTerm) || 
+                               email.includes(searchTerm) || 
+                               section.includes(searchTerm);
+                    });
+                }
+
+                document.getElementById('loadingSpinner').style.display = 'none';
+
+                if (filteredStudents.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-user-graduate"></i>
+                            <p>No students found</p>
+                            <p style="font-size: 12px; margin-top: 10px;">Try adjusting your filters or add new students</p>
+                        </div>
+                    `;
+                    countDisplay.textContent = 'Total: 0 students';
+                    totalSpan.textContent = allStudents.length;
+                    connectedSpan.textContent = allStudents.filter(s => isStudentConnected(s.email)).length;
+                    return;
+                }
+
+                const sortedStudents = [...filteredStudents].sort((a, b) => {
+                    const nameA = (a.lastName || a.fullName || '').toLowerCase();
+                    const nameB = (b.lastName || b.fullName || '').toLowerCase();
+                    return nameA.localeCompare(nameB);
+                });
+                
+                let html = '';
+                sortedStudents.forEach(student => {
+                    const avg = getStudentAverage(student.id);
+                    const passedCount = getPassingCount(student.id);
+                    const totalSubjects = allGrades.filter(g => g.studentId === student.id).length;
+                    const isConnected = isStudentConnected(student.email);
+                    
+                    const connectionStatus = isConnected ? 
+                        '<span class="connection-status status-connected"><i class="fas fa-check-circle"></i> Connected</span>' : 
+                        '<span class="connection-status status-pending"><i class="fas fa-clock"></i> Pending</span>';
+                    
+                    html += `
+                        <div class="student-card" onclick="toggleStudentDetails('${student.id}')">
+                            <div class="student-header">
+                                <span class="student-name">
+                                    ${escapeHtml(student.fullName || (student.lastName + ', ' + student.firstName) || 'Unknown')}
+                                    ${connectionStatus}
+                                </span>
+                                <span class="student-level-badge">
+                                    College
+                                </span>
+                            </div>
+                            <div class="student-details">
+                                <span><i class="fas fa-envelope"></i> ${escapeHtml(student.email || 'No email')}</span>
+                                <span><i class="fas fa-users"></i> ${escapeHtml(student.section || 'No section')}</span>
+                                <span><i class="fas fa-layer-group"></i> ${escapeHtml(student.yearLevel || 'College')}</span>
+                            </div>
+                            <div class="student-stats">
+                                <div class="stat-item">
+                                    <div class="stat-value">${totalSubjects}</div>
+                                    <div class="stat-label">Subjects</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value">${passedCount}</div>
+                                    <div class="stat-label">Passed</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value">${avg ? avg : 'N/A'}</div>
+                                    <div class="stat-label">GPA</div>
+                                </div>
+                            </div>
+                            <div id="details-${student.id}" class="expanded-details">
+                                <h4 style="color: #1B5E20; margin-bottom: 10px;">
+                                    <i class="fas fa-clock"></i> Recent Grades
+                                </h4>
+                                ${getStudentGradesHTML(student.id)}
+                                <button class="btn-view-grades" onclick="event.stopPropagation(); viewFullGrades('${student.id}')">
+                                    <i class="fas fa-chart-line"></i> View All Grades
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                container.innerHTML = html;
+                countDisplay.textContent = `Showing ${filteredStudents.length} of ${allStudents.length} students`;
+                totalSpan.textContent = allStudents.length;
+                connectedSpan.textContent = allStudents.filter(s => isStudentConnected(s.email)).length;
+            }, 300);
+        }
+
+        function toggleStudentDetails(studentId) {
+            const details = document.getElementById(`details-${studentId}`);
+            if (details) {
+                details.classList.toggle('show');
+            }
+        }
+
+        function viewFullGrades(studentId) {
+            localStorage.setItem('viewStudentId', studentId);
+            window.location.href = 'student-details-teacher.html';
+        }
+
+        function searchStudents() {
+            searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+            displayStudents();
+        }
+
+        function filterByConnection(type) {
+            connectionFilter = type;
+            
+            document.getElementById('connAll').classList.toggle('active', type === 'all');
+            document.getElementById('connConnected').classList.toggle('active', type === 'connected');
+            document.getElementById('connPending').classList.toggle('active', type === 'pending');
+            
+            displayStudents();
+        }
+
+        loadTeacherData();
+        displayStudents();
+
+        setInterval(() => {
+            loadTeacherData();
+            displayStudents();
+        }, 10000);
+    </script>
+</body>
+</html>

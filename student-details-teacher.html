@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Student Details - GradeSync Pro (College)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(145deg, #0B3B2A 0%, #1A4F3A 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 12px;
+        }
+
+        .app-container {
+            max-width: 420px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border-radius: 48px;
+            box-shadow: 0 30px 60px rgba(0, 100, 0, 0.4);
+            overflow: hidden;
+            border: 2px solid #2E7D32;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1B5E20 0%, #2E7D32 100%);
+            padding: 20px 24px;
+            position: relative;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .app-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #FFFFFF 0%, #E8F5E9 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: #1B5E20;
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .logo-text span {
+            color: #C8E6C9;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 30px;
+            color: white;
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+
+        .header h1 {
+            color: white;
+            font-size: 22px;
+            margin-top: 5px;
+        }
+
+        .header p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 13px;
+        }
+
+        .content {
+            padding: 20px;
+            background: #F1F8E9;
+            min-height: 600px;
+        }
+
+        .profile-card {
+            background: white;
+            border-radius: 24px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 2px solid #A5D6A7;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            position: relative;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .profile-avatar {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #2E7D32 0%, #1B5E20 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: white;
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .student-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1B5E20;
+            margin-bottom: 5px;
+        }
+
+        .student-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 8px;
+            font-size: 12px;
+            color: #2E7D32;
+        }
+
+        .student-details span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .level-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-top: 8px;
+            background: #E3F2FD;
+            color: #1976D2;
+        }
+
+        .summary-card {
+            background: white;
+            border-radius: 24px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 2px solid #A5D6A7;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .summary-label {
+            color: #1B5E20;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .summary-value {
+            font-size: 28px;
+            font-weight: 800;
+            color: #2E7D32;
+        }
+
+        .status-badge {
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .status-pass {
+            background: #A5D6A7;
+            color: #1B5E20;
+        }
+
+        .status-fail {
+            background: #FFCDD2;
+            color: #C62828;
+        }
+
+        .grades-container {
+            background: white;
+            border-radius: 24px;
+            border: 2px solid #A5D6A7;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .grade-header {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+            background: #E8F5E9;
+            padding: 15px;
+            font-weight: 700;
+            color: #1B5E20;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        .grade-header span:first-child {
+            text-align: left;
+        }
+
+        .grade-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+            padding: 15px;
+            border-top: 1px solid #C8E6C9;
+            font-size: 12px;
+            text-align: center;
+            align-items: center;
+            transition: background 0.3s;
+        }
+
+        .grade-row:hover {
+            background: #F1F8E9;
+        }
+
+        .grade-row span:first-child {
+            text-align: left;
+            font-weight: 500;
+        }
+
+        .grade-pass {
+            color: #2E7D32;
+            font-weight: 700;
+        }
+
+        .grade-fail {
+            color: #C62828;
+            font-weight: 700;
+        }
+
+        .grade-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .badge-pass-small {
+            background: #A5D6A7;
+            color: #1B5E20;
+        }
+
+        .badge-fail-small {
+            background: #FFCDD2;
+            color: #C62828;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .filter-tab {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #C8E6C9;
+            border-radius: 16px;
+            background: white;
+            color: #2E7D32;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .filter-tab:hover {
+            border-color: #2E7D32;
+            background: #E8F5E9;
+        }
+
+        .filter-tab.active {
+            background: #2E7D32;
+            color: white;
+            border-color: #1B5E20;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .btn-primary {
+            flex: 1;
+            padding: 14px;
+            background: #2E7D32;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .btn-primary:hover {
+            background: #1B5E20;
+            transform: scale(0.98);
+        }
+
+        .btn-secondary {
+            flex: 1;
+            padding: 14px;
+            background: #E8F5E9;
+            color: #2E7D32;
+            border: 2px solid #A5D6A7;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .btn-secondary:hover {
+            background: #C8E6C9;
+        }
+
+        .footer {
+            background: white;
+            padding: 15px;
+            text-align: center;
+            color: #2E7D32;
+            font-size: 12px;
+            border-top: 2px solid #A5D6A7;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #2E7D32;
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 15px;
+            color: #A5D6A7;
+        }
+
+        .info-text {
+            font-size: 11px;
+            color: #2E7D32;
+            margin-top: 10px;
+            text-align: center;
+            background: #E8F5E9;
+            padding: 8px;
+            border-radius: 30px;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 3px solid #E8F5E9;
+            border-radius: 50%;
+            border-top-color: #2E7D32;
+            animation: spin 1s ease-in-out infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .print-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: #2E7D32;
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+            z-index: 100;
+        }
+
+        .print-btn:hover {
+            background: #1B5E20;
+            transform: scale(1.1);
+        }
+
+        .toast-message {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2E7D32;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 500;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            z-index: 2000;
+            animation: toastSlideDown 0.3s ease;
+        }
+
+        @keyframes toastSlideDown {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -20px);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <div class="header">
+            <div class="header-top">
+                <div class="app-logo">
+                    <div class="logo-icon"><i class="fas fa-user-graduate"></i></div>
+                    <div class="logo-text">Student<span>Details</span></div>
+                </div>
+                <a href="view-students-enhanced.html" class="back-btn">
+                    <i class="fas fa-arrow-left"></i> Back
+                </a>
+            </div>
+            <h1 id="studentNameHeader">Student Details</h1>
+            <p>View complete grade information (College Grading System)</p>
+        </div>
+        
+        <div class="content">
+            <div id="profileCard" class="profile-card">
+                <div class="loading-spinner"></div>
+            </div>
+
+            <div class="summary-card" id="summaryCard">
+                <div class="loading-spinner"></div>
+            </div>
+
+            <div class="filter-tabs">
+                <button class="filter-tab active" onclick="filterGrades('all')" id="filterAll">All Subjects</button>
+                <button class="filter-tab" onclick="filterGrades('pass')" id="filterPass">Passed</button>
+                <button class="filter-tab" onclick="filterGrades('fail')" id="filterFail">Failed</button>
+            </div>
+
+            <div class="grades-container">
+                <div class="grade-header">
+                    <span>Subject</span>
+                    <span>Prelim</span>
+                    <span>Midterm</span>
+                    <span>Final</span>
+                    <span>Status</span>
+                </div>
+                <div id="gradesList">
+                    <div class="loading-spinner"></div>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <a href="add-grades-teacher.html?student=${studentId}" class="btn-primary" id="addGradeBtn">
+                    <i class="fas fa-plus"></i> Add Grade
+                </a>
+                <button class="btn-secondary" onclick="window.print()">
+                    <i class="fas fa-print"></i> Print Report
+                </button>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <i class="fas fa-chart-line"></i> College Grading System • 1.0 - 5.0 • Passing Grade: 3.0
+        </div>
+    </div>
+
+    <div class="print-btn" onclick="window.print()">
+        <i class="fas fa-print"></i>
+    </div>
+
+    <script>
+        const session = JSON.parse(localStorage.getItem('currentSession'));
+        
+        if (!session || session.role !== 'teacher') {
+            window.location.href = 'index.html';
+        }
+
+        const studentId = localStorage.getItem('viewStudentId');
+        
+        if (!studentId) {
+            window.location.href = 'view-students-enhanced.html';
+        }
+
+        const allUsers = JSON.parse(localStorage.getItem('grade_sync_users')) || [];
+        let allStudents = [];
+        let allGrades = [];
+        let currentStudent = null;
+        let currentFilter = 'all';
+
+        function showToast(message, isSuccess = true) {
+            const toast = document.createElement('div');
+            toast.className = 'toast-message';
+            toast.style.background = isSuccess ? '#2E7D32' : '#C62828';
+            toast.innerHTML = `<i class="fas fa-${isSuccess ? 'check-circle' : 'exclamation-circle'}"></i> ${message}`;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
+        function loadData() {
+            try {
+                allStudents = JSON.parse(localStorage.getItem(session.storageKeys.students)) || [];
+                allGrades = JSON.parse(localStorage.getItem(session.storageKeys.grades)) || [];
+                
+                currentStudent = allStudents.find(s => s.id === studentId);
+                
+                if (!currentStudent) {
+                    showToast('Student not found', false);
+                    setTimeout(() => {
+                        window.location.href = 'view-students-enhanced.html';
+                    }, 1500);
+                }
+                
+                console.log('Loaded data:', {
+                    student: currentStudent?.fullName,
+                    gradesCount: allGrades.filter(g => g.studentId === studentId).length
+                });
+            } catch (e) {
+                console.error('Error loading data:', e);
+            }
+        }
+
+        function calculateCollegeAverage(prelim, midterm, final) {
+            const avg = (parseFloat(prelim) + parseFloat(midterm) + parseFloat(final)) / 3;
+            return avg;
+        }
+
+        function formatCollegeGrade(value) {
+            if (value === undefined || value === null) return '0.0';
+            const num = parseFloat(value);
+            if (isNaN(num)) return '0.0';
+            return num.toFixed(2);
+        }
+
+        function isPassing(collegeGrade) {
+            const gradeNum = parseFloat(collegeGrade);
+            if (isNaN(gradeNum)) return false;
+            return gradeNum <= 3.0 && gradeNum >= 1.0;
+        }
+
+        function getStatusBadge(passed, collegeGrade) {
+            if (passed) {
+                return `<span class="grade-badge badge-pass-small"><i class="fas fa-check-circle"></i> PASS (${formatCollegeGrade(collegeGrade)})</span>`;
+            } else {
+                return `<span class="grade-badge badge-fail-small"><i class="fas fa-times-circle"></i> FAIL (${formatCollegeGrade(collegeGrade)} > 3.0)</span>`;
+            }
+        }
+
+        function getStudentGrades() {
+            return allGrades.filter(g => g.studentId === studentId);
+        }
+
+        function calculateOverallAverage() {
+            const studentGrades = getStudentGrades();
+            if (studentGrades.length === 0) return null;
+            
+            let total = 0;
+            studentGrades.forEach(g => {
+                let collegeGrade = g.collegeGrade;
+                if (!collegeGrade && g.prelim && g.midterm && g.final) {
+                    const avg = calculateCollegeAverage(g.prelim, g.midterm, g.final);
+                    collegeGrade = avg.toFixed(2);
+                }
+                const gradeNum = parseFloat(collegeGrade);
+                if (!isNaN(gradeNum)) {
+                    total += gradeNum;
+                }
+            });
+            return (total / studentGrades.length).toFixed(2);
+        }
+
+        function getPassFailCounts() {
+            const studentGrades = getStudentGrades();
+            let passed = 0;
+            let failed = 0;
+            
+            studentGrades.forEach(g => {
+                let collegeGrade = g.collegeGrade;
+                if (!collegeGrade && g.prelim && g.midterm && g.final) {
+                    const avg = calculateCollegeAverage(g.prelim, g.midterm, g.final);
+                    collegeGrade = avg.toFixed(2);
+                }
+                if (isPassing(collegeGrade)) {
+                    passed++;
+                } else {
+                    failed++;
+                }
+            });
+            
+            return { passed, failed };
+        }
+
+        function displayProfile() {
+            const container = document.getElementById('profileCard');
+            const header = document.getElementById('studentNameHeader');
+            
+            if (!currentStudent) return;
+            
+            const fullName = currentStudent.fullName || 
+                (currentStudent.lastName && currentStudent.firstName ? 
+                `${currentStudent.lastName}, ${currentStudent.firstName}` : 
+                currentStudent.name || 'Student');
+            
+            header.textContent = `${fullName}'s Grades`;
+            
+            container.innerHTML = `
+                <div class="profile-header">
+                    <div class="profile-avatar">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                    <div class="profile-info">
+                        <div class="student-name">${escapeHtml(fullName)}</div>
+                        <div class="student-details">
+                            <span><i class="fas fa-envelope"></i> ${escapeHtml(currentStudent.email || 'No email')}</span>
+                            <span><i class="fas fa-users"></i> ${escapeHtml(currentStudent.section || 'No section')}</span>
+                            <span><i class="fas fa-layer-group"></i> ${escapeHtml(currentStudent.yearLevel || 'College')}</span>
+                        </div>
+                        <span class="level-badge">College (1.0-5.0 Grading System)</span>
+                    </div>
+                </div>
+            `;
+            
+            const addGradeBtn = document.getElementById('addGradeBtn');
+            if (addGradeBtn) {
+                addGradeBtn.href = `add-grades-teacher.html?student=${studentId}`;
+            }
+        }
+
+        function displaySummary() {
+            const container = document.getElementById('summaryCard');
+            const studentGrades = getStudentGrades();
+            
+            if (studentGrades.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-chart-line"></i>
+                        <p>No grades recorded yet</p>
+                        <p style="font-size: 12px; margin-top: 10px;">Click "Add Grade" to input grades for this student</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const overallAvg = calculateOverallAverage();
+            const { passed, failed } = getPassFailCounts();
+            const overallStatus = overallAvg && isPassing(overallAvg) ? 'PASSING' : 'FAILING';
+            const statusClass = overallStatus === 'PASSING' ? 'status-pass' : 'status-fail';
+            
+            container.innerHTML = `
+                <div class="summary-row">
+                    <span class="summary-label">Overall GPA (1.0-5.0)</span>
+                    <span class="summary-value">${overallAvg || 'N/A'}</span>
+                </div>
+                <div class="summary-row">
+                    <span class="summary-label">Status</span>
+                    <span class="status-badge ${statusClass}">${overallStatus}</span>
+                </div>
+                <div class="summary-row" style="margin-bottom: 0;">
+                    <span class="summary-label">Subjects: ${studentGrades.length}</span>
+                    <span class="summary-label">Passed: ${passed} | Failed: ${failed}</span>
+                </div>
+                <div class="info-text">
+                    <i class="fas fa-info-circle"></i> 
+                    College Grading System: 1.0 (Excellent) - 3.0 (Passing) - 5.0 (Failed)
+                </div>
+            `;
+        }
+
+        function displayGrades() {
+            const container = document.getElementById('gradesList');
+            let studentGrades = getStudentGrades();
+            
+            if (studentGrades.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <p>No grades to display</p>
+                        <p style="font-size: 12px; margin-top: 10px;">Add grades for this student to see them here</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let filteredGrades = [...studentGrades];
+            
+            if (currentFilter === 'pass') {
+                filteredGrades = filteredGrades.filter(g => {
+                    let collegeGrade = g.collegeGrade;
+                    if (!collegeGrade && g.prelim && g.midterm && g.final) {
+                        const avg = calculateCollegeAverage(g.prelim, g.midterm, g.final);
+                        collegeGrade = avg.toFixed(2);
+                    }
+                    return isPassing(collegeGrade);
+                });
+            } else if (currentFilter === 'fail') {
+                filteredGrades = filteredGrades.filter(g => {
+                    let collegeGrade = g.collegeGrade;
+                    if (!collegeGrade && g.prelim && g.midterm && g.final) {
+                        const avg = calculateCollegeAverage(g.prelim, g.midterm, g.final);
+                        collegeGrade = avg.toFixed(2);
+                    }
+                    return !isPassing(collegeGrade);
+                });
+            }
+            
+            filteredGrades.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+            
+            let html = '';
+            filteredGrades.forEach(g => {
+                let prelim = g.prelim || g.grade1 || 0;
+                let midterm = g.midterm || g.grade2 || 0;
+                let final = g.final || g.grade3 || 0;
+                
+                let collegeGrade = g.collegeGrade;
+                
+                if (!collegeGrade && prelim && midterm && final) {
+                    const avg = calculateCollegeAverage(prelim, midterm, final);
+                    collegeGrade = avg.toFixed(2);
+                }
+                
+                const prelimDisplay = parseFloat(prelim).toFixed(1);
+                const midtermDisplay = parseFloat(midterm).toFixed(1);
+                const finalDisplay = parseFloat(final).toFixed(1);
+                const passed = isPassing(collegeGrade);
+                const statusClass = passed ? 'grade-pass' : 'grade-fail';
+                const statusBadge = getStatusBadge(passed, collegeGrade);
+                
+                html += `
+                    <div class="grade-row">
+                        <span>${escapeHtml(g.subject || 'Subject')}</span>
+                        <span>${prelimDisplay}</span>
+                        <span>${midtermDisplay}</span>
+                        <span>${finalDisplay}</span>
+                        <span class="${statusClass}">${statusBadge}</span>
+                    </div>
+                `;
+            });
+            
+            if (filteredGrades.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-search"></i>
+                        <p>No ${currentFilter === 'pass' ? 'passed' : currentFilter === 'fail' ? 'failed' : ''} grades to display</p>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = html;
+            }
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            return text.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+
+        function filterGrades(filter) {
+            currentFilter = filter;
+            
+            document.getElementById('filterAll').classList.toggle('active', filter === 'all');
+            document.getElementById('filterPass').classList.toggle('active', filter === 'pass');
+            document.getElementById('filterFail').classList.toggle('active', filter === 'fail');
+            
+            displayGrades();
+        }
+
+        function refreshData() {
+            loadData();
+            displayProfile();
+            displaySummary();
+            displayGrades();
+        }
+
+        loadData();
+        displayProfile();
+        displaySummary();
+        displayGrades();
+
+        setInterval(() => {
+            refreshData();
+        }, 10000);
+
+        window.addEventListener('storage', function(e) {
+            if (e.key === session.storageKeys.grades || e.key === session.storageKeys.students) {
+                console.log('Data updated in another tab, refreshing...');
+                refreshData();
+                showToast('Student data updated!', true);
+            }
+        });
+    </script>
+</body>
+</html>

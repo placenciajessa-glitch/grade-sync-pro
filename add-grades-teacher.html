@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Add Grades - GradeSync Pro (College)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(145deg, #0B3B2A 0%, #1A4F3A 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 12px;
+        }
+
+        .app-container {
+            max-width: 420px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border-radius: 48px;
+            box-shadow: 0 30px 60px rgba(0, 100, 0, 0.4);
+            overflow: hidden;
+            border: 2px solid #2E7D32;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1B5E20 0%, #2E7D32 100%);
+            padding: 20px 24px;
+            position: relative;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .app-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #FFFFFF 0%, #E8F5E9 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: #1B5E20;
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .logo-text span {
+            color: #C8E6C9;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 30px;
+            color: white;
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+
+        .header h1 {
+            color: white;
+            font-size: 24px;
+            margin-top: 5px;
+        }
+
+        .header p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 14px;
+        }
+
+        .teacher-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(255,255,255,0.2);
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 11px;
+            color: white;
+            margin-top: 5px;
+        }
+
+        .content {
+            padding: 20px;
+            background: #F1F8E9;
+            min-height: 600px;
+        }
+
+        .modern-card {
+            background: white;
+            border-radius: 32px;
+            padding: 24px;
+            box-shadow: 0 15px 30px rgba(46, 125, 50, 0.15);
+            border: 2px solid #A5D6A7;
+        }
+
+        .conversion-guide {
+            background: #E3F2FD;
+            border: 2px solid #1976D2;
+            border-radius: 16px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .conversion-title {
+            font-weight: 700;
+            color: #1976D2;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .conversion-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            font-size: 12px;
+        }
+
+        .conversion-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 10px;
+            background: white;
+            border-radius: 8px;
+        }
+
+        .conversion-grade {
+            font-weight: 700;
+            color: #1976D2;
+        }
+
+        .conversion-percent {
+            color: #2E7D32;
+        }
+
+        .conversion-pass {
+            border-left: 3px solid #2E7D32;
+        }
+
+        .conversion-fail {
+            border-left: 3px solid #C62828;
+        }
+
+        .student-selector {
+            margin-bottom: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .student-selector::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .student-selector::-webkit-scrollbar-track {
+            background: #E8F5E9;
+            border-radius: 10px;
+        }
+
+        .student-selector::-webkit-scrollbar-thumb {
+            background: #2E7D32;
+            border-radius: 10px;
+        }
+
+        .student-option {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border: 2px solid #C8E6C9;
+            border-radius: 16px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .student-option:hover {
+            border-color: #2E7D32;
+            background: #E8F5E9;
+            transform: translateX(5px);
+        }
+
+        .student-option.selected {
+            border-color: #2E7D32;
+            background: #E8F5E9;
+            box-shadow: 0 5px 10px rgba(46, 125, 50, 0.1);
+        }
+
+        .student-avatar {
+            width: 45px;
+            height: 45px;
+            background: #2E7D32;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            margin-right: 12px;
+            font-size: 20px;
+        }
+
+        .student-info {
+            flex: 1;
+        }
+
+        .student-name {
+            font-weight: 700;
+            color: #1B5E20;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            font-size: 15px;
+            margin-bottom: 3px;
+        }
+
+        .student-email {
+            font-size: 11px;
+            color: #2E7D32;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .student-level-badge {
+            font-size: 10px;
+            padding: 3px 8px;
+            border-radius: 30px;
+            background: #E3F2FD;
+            color: #1976D2;
+            font-weight: 600;
+        }
+
+        .student-status {
+            padding: 4px 10px;
+            border-radius: 30px;
+            font-size: 10px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .status-connected {
+            background: #A5D6A7;
+            color: #1B5E20;
+        }
+
+        .status-pending {
+            background: #FFE0B2;
+            color: #E65100;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #1B5E20;
+            margin-bottom: 8px;
+        }
+
+        .form-label i {
+            margin-right: 5px;
+            color: #2E7D32;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 16px 20px;
+            font-size: 16px;
+            border: 2px solid #C8E6C9;
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #2E7D32;
+            box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
+        }
+
+        .grade-input-group {
+            background: #E8F5E9;
+            border-radius: 20px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 2px solid #A5D6A7;
+        }
+
+        .grade-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .grade-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .grade-label-small {
+            font-weight: 600;
+            color: #1B5E20;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .grade-label-small i {
+            color: #2E7D32;
+        }
+
+        .grade-input-small {
+            width: 130px;
+            padding: 12px;
+            border: 2px solid #A5D6A7;
+            border-radius: 16px;
+            font-size: 16px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .grade-input-small:focus {
+            outline: none;
+            border-color: #2E7D32;
+            box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 24px;
+            background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(46, 125, 50, 0.3);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .preview-card {
+            background: #E8F5E9;
+            border-radius: 16px;
+            padding: 15px;
+            margin: 15px 0;
+            display: none;
+            border: 2px solid #A5D6A7;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .preview-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .preview-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .preview-label {
+            font-weight: 600;
+            color: #1B5E20;
+            font-size: 14px;
+        }
+
+        .preview-value {
+            color: #2E7D32;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .preview-status {
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-pass {
+            background: #A5D6A7;
+            color: #1B5E20;
+        }
+
+        .status-fail {
+            background: #FFCDD2;
+            color: #C62828;
+        }
+
+        .info-box {
+            background: #FFF3E0;
+            border: 2px solid #FF9800;
+            border-radius: 16px;
+            padding: 12px;
+            margin-bottom: 20px;
+            color: #E65100;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 30px 20px;
+            color: #2E7D32;
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 10px;
+            color: #A5D6A7;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .toast-message {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2E7D32;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 500;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            z-index: 2000;
+            animation: toastSlideDown 0.3s ease;
+        }
+
+        @keyframes toastSlideDown {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -20px);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+        }
+
+        .footer {
+            background: white;
+            padding: 15px;
+            text-align: center;
+            color: #2E7D32;
+            font-size: 12px;
+            border-top: 2px solid #A5D6A7;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <div class="header">
+            <div class="header-top">
+                <div class="app-logo">
+                    <div class="logo-icon"><i class="fas fa-pen"></i></div>
+                    <div class="logo-text">Add<span>Grades</span></div>
+                </div>
+                <a href="teacher-dashboard-unique.html" class="back-btn">
+                    <i class="fas fa-arrow-left"></i> Back
+                </a>
+            </div>
+            <h1>Add Student Grades</h1>
+            <p>Enter grades for your students (College 1.0-5.0 System)</p>
+            <div class="teacher-badge" id="teacherBadge">
+                <i class="fas fa-chalkboard-teacher"></i> <span id="teacherName">Loading...</span>
+            </div>
+        </div>
+        
+        <div class="content">
+            <div class="modern-card">
+                <div class="info-box" id="dynamicInfoBox">
+                    <i class="fas fa-info-circle fa-lg"></i>
+                    <span id="infoBoxText">Select a student to enter grades</span>
+                </div>
+
+                <div class="conversion-guide">
+                    <div class="conversion-title">
+                        <i class="fas fa-graduation-cap"></i>
+                        College Grade System (1.0 - 5.0)
+                    </div>
+                    <div class="conversion-grid">
+                        <div class="conversion-item conversion-pass"><span class="conversion-grade">1.0</span> <span class="conversion-percent">Excellent (96-100%)</span></div>
+                        <div class="conversion-item conversion-pass"><span class="conversion-grade">1.25</span> <span class="conversion-percent">Very Good (94-95%)</span></div>
+                        <div class="conversion-item conversion-pass"><span class="conversion-grade">1.5</span> <span class="conversion-percent">Good (91-93%)</span></div>
+                        <div class="conversion-item conversion-pass"><span class="conversion-grade">1.75</span> <span class="conversion-percent">Satisfactory (88-90%)</span></div>
+                        <div class="conversion-item conversion-pass"><span class="conversion-grade">2.0</span> <span class="conversion-percent">Fair (85-87%)</span></div>
+                        <div class="conversion-item conversion-pass"><span class="conversion-grade">2.25</span> <span class="conversion-percent">Average (82-84%)</span></div>
+                        <div class="conversion-item conversion-pass"><span class="conversion-grade">2.5</span> <span class="conversion-percent">Below Average (79-81%)</span></div>
+                        <div class="conversion-item conversion-pass"><span class="conversion-grade">2.75</span> <span class="conversion-percent">Poor (76-78%)</span></div>
+                        <div class="conversion-item conversion-pass"><span class="conversion-grade">3.0</span> <span class="conversion-percent">Passing (75%)</span></div>
+                        <div class="conversion-item conversion-fail"><span class="conversion-grade">5.0</span> <span class="conversion-percent">Failed (Below 75%)</span></div>
+                    </div>
+                    <div style="margin-top: 10px; font-size: 11px; color: #1976D2;">
+                        <i class="fas fa-check-circle" style="color: #2E7D32;"></i> Grades 1.0 to 3.0 are PASSING 
+                        <i class="fas fa-times-circle" style="color: #C62828; margin-left: 10px;"></i> 5.0 is FAILING
+                    </div>
+                </div>
+
+                <div class="student-selector" id="studentSelector">
+                </div>
+
+                <div id="gradeForm" style="display: none;">
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-book"></i> Subject</label>
+                        <input type="text" class="form-input" id="subject" placeholder="e.g., Mathematics, English, Science">
+                    </div>
+
+                    <div class="grade-input-group">
+                        <div class="grade-row">
+                            <span class="grade-label-small"><i class="fas fa-file"></i> Prelim:</span>
+                            <input type="number" class="grade-input-small" id="prelim" min="1.0" max="5.0" step="0.25" placeholder="1.0-5.0" oninput="updatePreview()">
+                        </div>
+                        <div class="grade-row">
+                            <span class="grade-label-small"><i class="fas fa-folder-open"></i> Midterm:</span>
+                            <input type="number" class="grade-input-small" id="midterm" min="1.0" max="5.0" step="0.25" placeholder="1.0-5.0" oninput="updatePreview()">
+                        </div>
+                        <div class="grade-row">
+                            <span class="grade-label-small"><i class="fas fa-check-circle"></i> Final:</span>
+                            <input type="number" class="grade-input-small" id="final" min="1.0" max="5.0" step="0.25" placeholder="1.0-5.0" oninput="updatePreview()">
+                        </div>
+                    </div>
+
+                    <div id="previewCard" class="preview-card">
+                        <div class="preview-row">
+                            <span class="preview-label">Average Grade:</span>
+                            <span class="preview-value" id="previewAverage">0.0</span>
+                        </div>
+                        <div class="preview-row">
+                            <span class="preview-label">Status:</span>
+                            <span id="previewStatus"></span>
+                        </div>
+                    </div>
+
+                    <button class="btn-primary" onclick="saveGrade()" id="saveBtn">
+                        <i class="fas fa-save"></i> Save Grades
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <i class="fas fa-sync"></i> Auto-syncs to student dashboard when they have an account
+        </div>
+    </div>
+
+    <script>
+        const session = JSON.parse(localStorage.getItem('currentSession'));
+        
+        if (!session || session.role !== 'teacher') {
+            window.location.href = 'index.html';
+        }
+
+        document.getElementById('teacherName').textContent = session.name || session.username || 'Teacher';
+
+        const allUsers = JSON.parse(localStorage.getItem('grade_sync_users')) || [];
+        let selectedStudent = null;
+
+        let students = [];
+        try {
+            students = JSON.parse(localStorage.getItem(session.storageKeys.students)) || [];
+        } catch (e) {
+            console.error('Error loading students:', e);
+            students = [];
+        }
+
+        function updateInfoBox() {
+            const infoBox = document.getElementById('infoBoxText');
+            const dynamicInfoBox = document.getElementById('dynamicInfoBox');
+            
+            if (!selectedStudent) {
+                infoBox.textContent = 'Select a student to enter grades';
+                dynamicInfoBox.style.background = '#FFF3E0';
+                dynamicInfoBox.style.borderColor = '#FF9800';
+                return;
+            }
+
+            infoBox.textContent = 'For college students: Enter Prelim, Midterm, and Final grades (1.0-5.0). Grades 1.0-3.0 are PASSING, 5.0 is FAILING.';
+            dynamicInfoBox.style.background = '#E3F2FD';
+            dynamicInfoBox.style.borderColor = '#1976D2';
+        }
+
+        function displayStudents() {
+            const selector = document.getElementById('studentSelector');
+            
+            if (students.length === 0) {
+                selector.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-user-graduate"></i>
+                        <p>No students added yet</p>
+                        <p style="font-size: 12px; margin-top: 10px;">Click "Add Student" in the dashboard to get started!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '<h3 style="color: #1B5E20; margin-bottom: 15px;">Select Student:</h3>';
+            
+            students.forEach(student => {
+                const studentUser = allUsers.find(u => u.email && student.email && 
+                    u.email.toLowerCase() === student.email.toLowerCase() && 
+                    u.role === 'student');
+                
+                const hasAccount = !!studentUser;
+                const isConnected = hasAccount && studentUser.teacherId === session.id;
+                
+                const fullName = student.fullName || 
+                    (student.lastName && student.firstName ? `${student.lastName}, ${student.firstName}` : 
+                    student.name || 'Student');
+                
+                let statusHtml = '';
+                if (isConnected) {
+                    statusHtml = '<span class="student-status status-connected"><i class="fas fa-check-circle"></i> Connected</span>';
+                } else if (hasAccount) {
+                    statusHtml = '<span class="student-status status-connected" style="background: #FFD700;"><i class="fas fa-exclamation-triangle"></i> Not Linked</span>';
+                } else {
+                    statusHtml = '<span class="student-status status-pending"><i class="fas fa-clock"></i> Pending</span>';
+                }
+                
+                html += `
+                    <div class="student-option" onclick="selectStudent('${student.id}', '${student.email}')">
+                        <div class="student-avatar">
+                            <i class="fas fa-user-graduate"></i>
+                        </div>
+                        <div class="student-info">
+                            <div class="student-name">
+                                ${escapeHtml(fullName)}
+                                <span class="student-level-badge">College</span>
+                            </div>
+                            <div class="student-email">
+                                <i class="fas fa-envelope"></i> ${escapeHtml(student.email || 'No email')}
+                            </div>
+                        </div>
+                        <div>
+                            ${statusHtml}
+                        </div>
+                    </div>
+                `;
+            });
+
+            selector.innerHTML = html;
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            return text.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+
+        function selectStudent(studentId, email) {
+            selectedStudent = students.find(s => s.id === studentId);
+            selectedStudent.email = email;
+            
+            document.querySelectorAll('.student-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+            
+            document.getElementById('gradeForm').style.display = 'block';
+            
+            document.getElementById('subject').value = '';
+            document.getElementById('prelim').value = '';
+            document.getElementById('midterm').value = '';
+            document.getElementById('final').value = '';
+            document.getElementById('previewCard').style.display = 'none';
+            
+            updateInfoBox();
+        }
+
+        function updatePreview() {
+            let prelim = parseFloat(document.getElementById('prelim').value);
+            let midterm = parseFloat(document.getElementById('midterm').value);
+            let final = parseFloat(document.getElementById('final').value);
+            
+            if (isNaN(prelim) || isNaN(midterm) || isNaN(final)) {
+                return;
+            }
+            
+            if (prelim === 0 || midterm === 0 || final === 0) {
+                return;
+            }
+
+            const average = (prelim + midterm + final) / 3;
+            const isPassing = average <= 3.0;
+            
+            document.getElementById('previewCard').style.display = 'block';
+            document.getElementById('previewAverage').textContent = average.toFixed(2);
+            
+            const statusSpan = document.getElementById('previewStatus');
+            if (isPassing) {
+                statusSpan.innerHTML = '<span class="preview-status status-pass"><i class="fas fa-check-circle"></i> PASSING</span>';
+            } else {
+                statusSpan.innerHTML = '<span class="preview-status status-fail"><i class="fas fa-times-circle"></i> FAILING</span>';
+            }
+        }
+
+        function showToast(message, isSuccess = true) {
+            const toast = document.createElement('div');
+            toast.className = 'toast-message';
+            toast.style.background = isSuccess ? '#2E7D32' : '#C62828';
+            toast.innerHTML = `<i class="fas fa-${isSuccess ? 'check-circle' : 'exclamation-circle'}"></i> ${message}`;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
+        function saveGrade() {
+            if (!selectedStudent) {
+                alert('Please select a student');
+                return;
+            }
+
+            const subject = document.getElementById('subject').value.trim();
+            const prelim = parseFloat(document.getElementById('prelim').value);
+            const midterm = parseFloat(document.getElementById('midterm').value);
+            const final = parseFloat(document.getElementById('final').value);
+
+            if (!subject) {
+                alert('Please enter subject');
+                return;
+            }
+
+            if (isNaN(prelim) || isNaN(midterm) || isNaN(final)) {
+                alert('Please enter all grades');
+                return;
+            }
+
+            if (prelim < 1.0 || prelim > 5.0 || midterm < 1.0 || midterm > 5.0 || final < 1.0 || final > 5.0) {
+                alert('College grades must be between 1.0 and 5.0');
+                return;
+            }
+
+            const average = (prelim + midterm + final) / 3;
+            const collegeGrade = average.toFixed(2);
+            const passed = average <= 3.0;
+
+            const studentUser = allUsers.find(u => 
+                u.email && selectedStudent.email && 
+                u.email.toLowerCase() === selectedStudent.email.toLowerCase() && 
+                u.role === 'student'
+            );
+            
+            if (!studentUser) {
+                const studentById = allUsers.find(u => u.id === selectedStudent.id && u.role === 'student');
+                if (studentById) {
+                    const userIndex = allUsers.findIndex(u => u.id === studentById.id);
+                    if (userIndex !== -1) {
+                        allUsers[userIndex].teacherId = session.id;
+                        localStorage.setItem('grade_sync_users', JSON.stringify(allUsers));
+                    }
+                }
+            }
+            
+            const hasAccount = !!studentUser;
+            const isConnected = hasAccount && studentUser.teacherId === session.id;
+            
+            const gradeId = Date.now().toString() + '_' + Math.random().toString(36).substr(2, 5);
+
+            const teacherGradeData = {
+                id: gradeId,
+                studentId: selectedStudent.id,
+                studentEmail: selectedStudent.email,
+                studentName: selectedStudent.fullName || 
+                    (selectedStudent.lastName && selectedStudent.firstName ? 
+                    `${selectedStudent.lastName}, ${selectedStudent.firstName}` : 
+                    selectedStudent.name || 'Student'),
+                subject: subject,
+                educationalLevel: 'college',
+                gradeType: 'college',
+                prelim: prelim,
+                midterm: midterm,
+                final: final,
+                average: average,
+                collegeGrade: collegeGrade,
+                passed: passed,
+                date: new Date().toISOString(),
+                teacherId: session.id,
+                teacherName: session.name || session.username || session.email,
+                synced: isConnected,
+                originalInput: {
+                    prelim: prelim,
+                    midterm: midterm,
+                    final: final,
+                    type: 'college'
+                }
+            };
+
+            let teacherGrades = [];
+            try {
+                teacherGrades = JSON.parse(localStorage.getItem(session.storageKeys.grades)) || [];
+            } catch (e) {
+                console.error('Error loading teacher grades:', e);
+                teacherGrades = [];
+            }
+            
+            teacherGrades.push(teacherGradeData);
+            localStorage.setItem(session.storageKeys.grades, JSON.stringify(teacherGrades));
+            console.log('✅ Saved to teacher grades:', teacherGradeData);
+
+            if (isConnected && studentUser) {
+                console.log('🎯 SAVING GRADE TO CONNECTED STUDENT:', studentUser.email);
+                
+                let studentGrades = [];
+                try {
+                    studentGrades = JSON.parse(localStorage.getItem(studentUser.storageKeys.grades)) || [];
+                } catch (e) {
+                    console.error('Error loading student grades:', e);
+                    studentGrades = [];
+                }
+                
+                const studentGradeData = {
+                    id: gradeId,
+                    studentId: studentUser.id,
+                    studentEmail: studentUser.email,
+                    studentName: studentUser.fullName || studentUser.name || selectedStudent.fullName,
+                    subject: subject,
+                    educationalLevel: 'college',
+                    gradeType: 'college',
+                    prelim: prelim,
+                    midterm: midterm,
+                    final: final,
+                    average: average,
+                    collegeGrade: collegeGrade,
+                    passed: passed,
+                    date: new Date().toISOString(),
+                    teacherId: session.id,
+                    teacherName: session.name || session.username,
+                    teacherEmail: session.email,
+                    originalInput: {
+                        prelim: prelim,
+                        midterm: midterm,
+                        final: final,
+                        type: 'college'
+                    }
+                };
+                
+                studentGrades.push(studentGradeData);
+                
+                try {
+                    localStorage.setItem(studentUser.storageKeys.grades, JSON.stringify(studentGrades));
+                    console.log('✅ Grade saved to student storage');
+                } catch (e) {
+                    console.error('❌ Error saving to student storage:', e);
+                }
+                
+                let studentNotifications = [];
+                try {
+                    studentNotifications = JSON.parse(localStorage.getItem(studentUser.storageKeys.notifications)) || [];
+                } catch (e) {
+                    console.error('Error loading student notifications:', e);
+                }
+                
+                studentNotifications.push({
+                    id: Date.now(),
+                    type: 'new_grade',
+                    message: `New grade added for ${subject}: ${collegeGrade} - ${passed ? 'PASSED' : 'FAILED'}`,
+                    subject: subject,
+                    collegeGrade: collegeGrade,
+                    teacherName: session.name || session.username,
+                    timestamp: new Date().toISOString(),
+                    read: false
+                });
+                
+                try {
+                    localStorage.setItem(studentUser.storageKeys.notifications, JSON.stringify(studentNotifications));
+                } catch (e) {
+                    console.error('Error saving student notifications:', e);
+                }
+                
+                showToast(`✅ Grade saved and synced to ${studentUser.firstName || 'student'}'s dashboard!`);
+            } else {
+                if (hasAccount) {
+                    showToast(`✅ Grade saved. Student needs to connect to your class first.`);
+                } else {
+                    showToast(`✅ Grade saved. Student will see it when they sign up with ${selectedStudent.email}`);
+                }
+            }
+            
+            document.getElementById('subject').value = '';
+            document.getElementById('prelim').value = '';
+            document.getElementById('midterm').value = '';
+            document.getElementById('final').value = '';
+            document.getElementById('previewCard').style.display = 'none';
+            
+            document.querySelectorAll('.student-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            selectedStudent = null;
+        }
+
+        displayStudents();
+
+        setInterval(() => {
+            try {
+                students = JSON.parse(localStorage.getItem(session.storageKeys.students)) || [];
+            } catch (e) {
+                console.error('Error reloading students:', e);
+            }
+            displayStudents();
+        }, 10000);
+    </script>
+</body>
+</html>

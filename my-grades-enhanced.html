@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>My Grades - GradeSync Pro (College)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(145deg, #0B3B2A 0%, #1A4F3A 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 12px;
+        }
+
+        .app-container {
+            max-width: 420px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border-radius: 48px;
+            box-shadow: 0 30px 60px rgba(0, 100, 0, 0.4);
+            overflow: hidden;
+            border: 2px solid #2E7D32;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1B5E20 0%, #2E7D32 100%);
+            padding: 20px 24px;
+            position: relative;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .app-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #FFFFFF 0%, #E8F5E9 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: #1B5E20;
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .logo-text span {
+            color: #C8E6C9;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 30px;
+            color: white;
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+
+        .header h1 {
+            color: white;
+            font-size: 24px;
+            margin-top: 5px;
+        }
+
+        .header p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 14px;
+        }
+
+        .student-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(255,255,255,0.2);
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 11px;
+            color: white;
+            margin-top: 5px;
+        }
+
+        .content {
+            padding: 20px;
+            background: #F1F8E9;
+            min-height: 600px;
+        }
+
+        .summary-card {
+            background: white;
+            border-radius: 24px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 2px solid #A5D6A7;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .summary-label {
+            color: #1B5E20;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .summary-value {
+            font-size: 32px;
+            font-weight: 800;
+            color: #2E7D32;
+            line-height: 1.2;
+        }
+
+        .status-badge {
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .status-pass {
+            background: #A5D6A7;
+            color: #1B5E20;
+        }
+
+        .status-fail {
+            background: #FFCDD2;
+            color: #C62828;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .filter-tab {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #C8E6C9;
+            border-radius: 16px;
+            background: white;
+            color: #2E7D32;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .filter-tab:hover {
+            border-color: #2E7D32;
+            background: #E8F5E9;
+        }
+
+        .filter-tab.active {
+            background: #2E7D32;
+            color: white;
+            border-color: #1B5E20;
+        }
+
+        .grades-container {
+            background: white;
+            border-radius: 24px;
+            border: 2px solid #A5D6A7;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .grade-header {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+            background: #E8F5E9;
+            padding: 15px;
+            font-weight: 700;
+            color: #1B5E20;
+            font-size: 13px;
+            text-align: center;
+        }
+
+        .grade-header span:first-child {
+            text-align: left;
+        }
+
+        .grade-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+            padding: 15px;
+            border-top: 1px solid #C8E6C9;
+            font-size: 13px;
+            text-align: center;
+            align-items: center;
+            transition: background 0.3s;
+        }
+
+        .grade-row:hover {
+            background: #F1F8E9;
+        }
+
+        .grade-row span:first-child {
+            text-align: left;
+            font-weight: 500;
+        }
+
+        .grade-pass {
+            color: #2E7D32;
+            font-weight: 700;
+        }
+
+        .grade-fail {
+            color: #C62828;
+            font-weight: 700;
+        }
+
+        .grade-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .badge-pass-small {
+            background: #A5D6A7;
+            color: #1B5E20;
+        }
+
+        .badge-fail-small {
+            background: #FFCDD2;
+            color: #C62828;
+        }
+
+        .footer {
+            background: white;
+            padding: 15px;
+            text-align: center;
+            color: #2E7D32;
+            font-size: 12px;
+            border-top: 2px solid #A5D6A7;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #2E7D32;
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 15px;
+            color: #A5D6A7;
+        }
+
+        .info-text {
+            font-size: 11px;
+            color: #2E7D32;
+            margin-top: 10px;
+            text-align: center;
+            background: #E8F5E9;
+            padding: 8px;
+            border-radius: 30px;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 3px solid #E8F5E9;
+            border-radius: 50%;
+            border-top-color: #2E7D32;
+            animation: spin 1s ease-in-out infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .teacher-info {
+            background: #E8F5E9;
+            border-radius: 16px;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: 2px solid #A5D6A7;
+        }
+
+        .teacher-avatar {
+            width: 45px;
+            height: 45px;
+            background: #2E7D32;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 22px;
+        }
+
+        .teacher-details {
+            flex: 1;
+        }
+
+        .teacher-details h4 {
+            color: #1B5E20;
+            font-size: 15px;
+            margin-bottom: 3px;
+        }
+
+        .teacher-details p {
+            color: #2E7D32;
+            font-size: 11px;
+        }
+
+        .toast-message {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2E7D32;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 500;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            z-index: 2000;
+            animation: toastSlideDown 0.3s ease;
+        }
+
+        @keyframes toastSlideDown {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -20px);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <div class="header">
+            <div class="header-top">
+                <div class="app-logo">
+                    <div class="logo-icon"><i class="fas fa-chart-line"></i></div>
+                    <div class="logo-text">My<span>Grades</span></div>
+                </div>
+                <a href="student-dashboard-unique.html" class="back-btn">
+                    <i class="fas fa-arrow-left"></i> Back
+                </a>
+            </div>
+            <h1>My Grades</h1>
+            <p>View your academic performance (College Grading System)</p>
+            <div class="student-badge">
+                <i class="fas fa-graduation-cap"></i> <span id="userEmail">Loading...</span>
+            </div>
+        </div>
+        
+        <div class="content">
+            <div id="teacherContainer" style="display: none;"></div>
+
+            <div class="summary-card" id="summaryCard">
+                <div class="loading-spinner"></div>
+            </div>
+
+            <div class="filter-tabs">
+                <button class="filter-tab active" onclick="filterGrades('all')" id="filterAll">All</button>
+                <button class="filter-tab" onclick="filterGrades('pass')" id="filterPass">Passed</button>
+                <button class="filter-tab" onclick="filterGrades('fail')" id="filterFail">Failed</button>
+            </div>
+
+            <div class="grades-container">
+                <div class="grade-header">
+                    <span>Subject</span>
+                    <span>Prelim</span>
+                    <span>Midterm</span>
+                    <span>Final</span>
+                    <span>Status</span>
+                </div>
+                <div id="gradesList">
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <i class="fas fa-graduation-cap"></i> College Grading System • 1.0 - 5.0 • Passing Grade: 3.0
+        </div>
+    </div>
+
+    <script>
+        const session = JSON.parse(localStorage.getItem('currentSession'));
+        
+        if (!session || session.role !== 'student') {
+            window.location.href = 'index.html';
+        }
+
+        const allUsers = JSON.parse(localStorage.getItem('grade_sync_users')) || [];
+        
+        document.getElementById('userEmail').textContent = session.email || 'student@gmail.com';
+
+        let grades = [];
+        
+        function loadGrades() {
+            try {
+                grades = JSON.parse(localStorage.getItem(session.storageKeys.grades)) || [];
+                console.log('Loaded grades:', grades.length);
+                
+                grades.forEach((grade, index) => {
+                    console.log(`Grade ${index}:`, {
+                        subject: grade.subject,
+                        prelim: grade.prelim,
+                        midterm: grade.midterm,
+                        final: grade.final,
+                        collegeGrade: grade.collegeGrade,
+                        average: grade.average,
+                        passed: grade.passed
+                    });
+                });
+            } catch (e) {
+                console.error('Error loading grades:', e);
+                grades = [];
+            }
+        }
+
+        function calculateCollegeAverage(prelim, midterm, final) {
+            const avg = (parseFloat(prelim) + parseFloat(midterm) + parseFloat(final)) / 3;
+            return avg;
+        }
+
+        function formatCollegeGrade(value) {
+            if (value === undefined || value === null) return '0.0';
+            const num = parseFloat(value);
+            if (isNaN(num)) return '0.0';
+            return num.toFixed(2);
+        }
+
+        function isPassing(collegeGrade) {
+            const gradeNum = parseFloat(collegeGrade);
+            if (isNaN(gradeNum)) return false;
+            return gradeNum <= 3.0 && gradeNum >= 1.0;
+        }
+
+        function getStatusBadge(passed, collegeGrade) {
+            if (passed) {
+                return `<span class="grade-badge badge-pass-small"><i class="fas fa-check-circle"></i> PASS (${formatCollegeGrade(collegeGrade)})</span>`;
+            } else {
+                return `<span class="grade-badge badge-fail-small"><i class="fas fa-times-circle"></i> FAIL (${formatCollegeGrade(collegeGrade)} > 3.0)</span>`;
+            }
+        }
+
+        function displayTeacherInfo() {
+            const teacherContainer = document.getElementById('teacherContainer');
+            
+            if (session.teacherId) {
+                const teacher = allUsers.find(u => u.id === session.teacherId);
+                if (teacher) {
+                    teacherContainer.style.display = 'block';
+                    teacherContainer.innerHTML = `
+                        <div class="teacher-info">
+                            <div class="teacher-avatar">
+                                <i class="fas fa-chalkboard-teacher"></i>
+                            </div>
+                            <div class="teacher-details">
+                                <h4>${teacher.name || teacher.username || 'Your Teacher'}</h4>
+                                <p><i class="fas fa-envelope"></i> ${teacher.email}</p>
+                                <p><i class="fas fa-check-circle" style="color: #2E7D32;"></i> Connected</p>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+        }
+
+        function calculateSummary() {
+            const summaryCard = document.getElementById('summaryCard');
+            
+            if (grades.length === 0) {
+                summaryCard.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-chart-line"></i>
+                        <p>No grades available yet</p>
+                        <p style="font-size: 12px; margin-top: 10px;">Your grades will appear here once added by your teacher</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let totalGrade = 0;
+            let passed = 0;
+            let failed = 0;
+
+            grades.forEach(grade => {
+                let collegeGrade = grade.collegeGrade;
+                
+                if (!collegeGrade && grade.prelim && grade.midterm && grade.final) {
+                    const avg = calculateCollegeAverage(grade.prelim, grade.midterm, grade.final);
+                    collegeGrade = avg.toFixed(2);
+                }
+                
+                const gradeNum = parseFloat(collegeGrade);
+                if (!isNaN(gradeNum)) {
+                    totalGrade += gradeNum;
+                    
+                    if (gradeNum <= 3.0 && gradeNum >= 1.0) {
+                        passed++;
+                    } else {
+                        failed++;
+                    }
+                }
+            });
+
+            const gpa = (totalGrade / grades.length).toFixed(2);
+            const overallStatus = isPassing(gpa) ? 'PASSING' : 'FAILING';
+            const statusClass = isPassing(gpa) ? 'status-pass' : 'status-fail';
+
+            summaryCard.innerHTML = `
+                <div class="summary-row">
+                    <span class="summary-label">Overall GPA (1.0-5.0)</span>
+                    <span class="summary-value">${gpa}</span>
+                </div>
+                <div class="summary-row">
+                    <span class="summary-label">Status</span>
+                    <span class="status-badge ${statusClass}">${overallStatus}</span>
+                </div>
+                <div class="summary-row" style="margin-bottom: 0;">
+                    <span class="summary-label">Subjects: ${grades.length}</span>
+                    <span class="summary-label">Passed: ${passed} | Failed: ${failed}</span>
+                </div>
+                <div class="info-text">
+                    <i class="fas fa-info-circle"></i> 
+                    College Grading System: 1.0 (Excellent) - 3.0 (Passing) - 5.0 (Failed)
+                </div>
+            `;
+        }
+
+        let currentFilter = 'all';
+
+        function displayGrades() {
+            const gradesList = document.getElementById('gradesList');
+            
+            if (grades.length === 0) {
+                gradesList.innerHTML = '<div class="empty-state"><i class="fas fa-inbox"></i><p>No grades to display</p></div>';
+                return;
+            }
+
+            let filteredGrades = [...grades];
+            
+            if (currentFilter === 'pass') {
+                filteredGrades = filteredGrades.filter(grade => {
+                    let collegeGrade = grade.collegeGrade;
+                    if (!collegeGrade && grade.prelim && grade.midterm && grade.final) {
+                        const avg = calculateCollegeAverage(grade.prelim, grade.midterm, grade.final);
+                        collegeGrade = avg.toFixed(2);
+                    }
+                    return isPassing(collegeGrade);
+                });
+            } else if (currentFilter === 'fail') {
+                filteredGrades = filteredGrades.filter(grade => {
+                    let collegeGrade = grade.collegeGrade;
+                    if (!collegeGrade && grade.prelim && grade.midterm && grade.final) {
+                        const avg = calculateCollegeAverage(grade.prelim, grade.midterm, grade.final);
+                        collegeGrade = avg.toFixed(2);
+                    }
+                    return !isPassing(collegeGrade);
+                });
+            }
+
+            filteredGrades.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+
+            let html = '';
+            filteredGrades.forEach(grade => {
+                let prelim = grade.prelim || grade.grade1 || 0;
+                let midterm = grade.midterm || grade.grade2 || 0;
+                let final = grade.final || grade.grade3 || 0;
+                
+                let collegeGrade = grade.collegeGrade;
+                
+                if (!collegeGrade && prelim && midterm && final) {
+                    const avg = calculateCollegeAverage(prelim, midterm, final);
+                    collegeGrade = avg.toFixed(2);
+                }
+                
+                const prelimDisplay = parseFloat(prelim).toFixed(1);
+                const midtermDisplay = parseFloat(midterm).toFixed(1);
+                const finalDisplay = parseFloat(final).toFixed(1);
+                const passed = isPassing(collegeGrade);
+                const statusClass = passed ? 'grade-pass' : 'grade-fail';
+                const statusBadge = getStatusBadge(passed, collegeGrade);
+                
+                const teacherName = grade.teacherName ? 
+                    `<span style="font-size: 10px; color: #2E7D32; display: block; text-align: left;">by: ${grade.teacherName}</span>` : '';
+
+                html += `
+                    <div class="grade-row">
+                        <span>
+                            ${grade.subject || 'Subject'}
+                            ${teacherName}
+                        </span>
+                        <span>${prelimDisplay}</span>
+                        <span>${midtermDisplay}</span>
+                        <span>${finalDisplay}</span>
+                        <span class="${statusClass}">${statusBadge}</span>
+                    </div>
+                `;
+            });
+
+            if (filteredGrades.length === 0) {
+                gradesList.innerHTML = '<div class="empty-state"><i class="fas fa-search"></i><p>No grades match the filter</p></div>';
+            } else {
+                gradesList.innerHTML = html;
+            }
+        }
+
+        function filterGrades(filter) {
+            currentFilter = filter;
+            
+            document.getElementById('filterAll').classList.toggle('active', filter === 'all');
+            document.getElementById('filterPass').classList.toggle('active', filter === 'pass');
+            document.getElementById('filterFail').classList.toggle('active', filter === 'fail');
+            
+            displayGrades();
+        }
+
+        function showToast(message, isSuccess = true) {
+            const toast = document.createElement('div');
+            toast.className = 'toast-message';
+            toast.style.background = isSuccess ? '#2E7D32' : '#C62828';
+            toast.innerHTML = `<i class="fas fa-${isSuccess ? 'check-circle' : 'exclamation-circle'}"></i> ${message}`;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
+        function refreshGrades() {
+            try {
+                const freshGrades = JSON.parse(localStorage.getItem(session.storageKeys.grades)) || [];
+                const oldCount = grades.length;
+                grades = freshGrades;
+                calculateSummary();
+                displayGrades();
+                
+                if (grades.length > oldCount) {
+                    showToast('New grades added!', true);
+                }
+                console.log('Grades refreshed:', grades.length);
+            } catch (e) {
+                console.error('Error refreshing grades:', e);
+            }
+        }
+
+        loadGrades();
+        displayTeacherInfo();
+        calculateSummary();
+        displayGrades();
+
+        setInterval(() => {
+            refreshGrades();
+        }, 10000);
+
+        window.addEventListener('storage', function(e) {
+            if (e.key === session.storageKeys.grades) {
+                console.log('Grades updated in another tab, refreshing...');
+                refreshGrades();
+                showToast('Grades updated by teacher!', true);
+            }
+        });
+
+        window.refreshGrades = refreshGrades;
+    </script>
+</body>
+</html>

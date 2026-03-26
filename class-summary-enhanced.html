@@ -1,0 +1,1278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Class Summary - GradeSync Pro (College)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(145deg, #0B3B2A 0%, #1A4F3A 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 12px;
+        }
+
+        .app-container {
+            max-width: 1400px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 48px;
+            box-shadow: 0 30px 60px rgba(0, 100, 0, 0.4);
+            overflow: hidden;
+            border: 2px solid #2E7D32;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1B5E20 0%, #2E7D32 100%);
+            padding: 20px 24px;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .app-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #FFFFFF 0%, #E8F5E9 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: #1B5E20;
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .logo-text span {
+            color: #C8E6C9;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 30px;
+            color: white;
+            padding: 8px 16px;
+            font-size: 14px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .header h1 {
+            color: white;
+            font-size: 24px;
+            margin-top: 5px;
+        }
+
+        .header p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 14px;
+        }
+
+        .teacher-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(255,255,255,0.2);
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 11px;
+            color: white;
+            margin-top: 5px;
+        }
+
+        .content {
+            padding: 20px;
+            background: #F1F8E9;
+            min-height: 600px;
+        }
+
+        .filter-panel {
+            background: white;
+            border-radius: 32px;
+            padding: 24px;
+            margin-bottom: 20px;
+            border: 2px solid #A5D6A7;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+        }
+
+        .filter-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1B5E20;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .filter-item {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .filter-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1B5E20;
+        }
+
+        .filter-label i {
+            margin-right: 5px;
+            color: #2E7D32;
+        }
+
+        .filter-select, .filter-input {
+            padding: 12px 16px;
+            border: 2px solid #C8E6C9;
+            border-radius: 20px;
+            font-size: 14px;
+            background: white;
+            transition: all 0.3s;
+        }
+
+        .filter-select:focus, .filter-input:focus {
+            outline: none;
+            border-color: #2E7D32;
+            box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
+        }
+
+        .filter-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+
+        .btn-primary {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 24px;
+            background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%);
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(46, 125, 50, 0.3);
+        }
+
+        .btn-secondary {
+            padding: 12px 24px;
+            border: 2px solid #A5D6A7;
+            border-radius: 24px;
+            background: white;
+            color: #2E7D32;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .btn-secondary:hover {
+            border-color: #2E7D32;
+            background: #E8F5E9;
+        }
+
+        .class-info-card {
+            background: white;
+            border-radius: 32px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 2px solid #A5D6A7;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .info-chip {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #E8F5E9;
+            padding: 8px 16px;
+            border-radius: 30px;
+            border: 1px solid #A5D6A7;
+        }
+
+        .chip-label {
+            font-size: 12px;
+            color: #2E7D32;
+            font-weight: 500;
+        }
+
+        .chip-value {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1B5E20;
+        }
+
+        .research-container {
+            background: white;
+            border-radius: 32px;
+            border: 2px solid #A5D6A7;
+            overflow-x: auto;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+        }
+
+        .research-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            min-width: 800px;
+        }
+
+        .research-table th {
+            background: #E8F5E9;
+            color: #1B5E20;
+            font-weight: 600;
+            font-size: 13px;
+            padding: 16px 12px;
+            text-align: center;
+            border-bottom: 2px solid #A5D6A7;
+        }
+
+        .research-table td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #C8E6C9;
+            text-align: center;
+        }
+
+        .research-table td:first-child {
+            text-align: left;
+            font-weight: 500;
+        }
+
+        .gender-male-row {
+            background: #E3F2FD !important;
+        }
+
+        .gender-female-row {
+            background: #FCE4EC !important;
+        }
+
+        .gender-icon-small {
+            margin-right: 6px;
+            font-size: 12px;
+        }
+
+        .gender-male-icon {
+            color: #1976D2;
+        }
+
+        .gender-female-icon {
+            color: #C2185B;
+        }
+
+        .grade-pass {
+            color: #2E7D32;
+            font-weight: 700;
+        }
+
+        .grade-fail {
+            color: #C62828;
+            font-weight: 700;
+        }
+
+        .status-pass {
+            background: #A5D6A7;
+            color: #1B5E20;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 11px;
+            display: inline-block;
+        }
+
+        .status-fail {
+            background: #FFCDD2;
+            color: #C62828;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 11px;
+            display: inline-block;
+        }
+
+        .gender-group-header {
+            background: linear-gradient(135deg, #1B5E20 0%, #2E7D32 100%);
+            color: white;
+            padding: 15px 20px;
+            margin: 20px 0 10px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .gender-group-header:first-of-type {
+            margin-top: 0;
+        }
+
+        .gender-group-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .gender-group-count {
+            background: rgba(255,255,255,0.2);
+            padding: 5px 15px;
+            border-radius: 30px;
+            font-weight: 600;
+        }
+
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .summary-card {
+            background: white;
+            border-radius: 24px;
+            padding: 20px 10px;
+            text-align: center;
+            border: 2px solid #A5D6A7;
+            transition: transform 0.2s;
+        }
+
+        .summary-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .summary-label {
+            font-size: 12px;
+            color: #2E7D32;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .summary-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1B5E20;
+        }
+
+        .export-btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 30px;
+            background: white;
+            border: 2px solid #2E7D32;
+            color: #2E7D32;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+
+        .export-btn:hover {
+            background: #2E7D32;
+            color: white;
+            transform: scale(1.01);
+        }
+
+        .footer {
+            background: white;
+            padding: 15px;
+            text-align: center;
+            color: #2E7D32;
+            font-size: 12px;
+            border-top: 2px solid #A5D6A7;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #2E7D32;
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 15px;
+            color: #A5D6A7;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 3px solid #E8F5E9;
+            border-radius: 50%;
+            border-top-color: #2E7D32;
+            animation: spin 1s ease-in-out infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .summary-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .filter-grid {
+                grid-template-columns: 1fr;
+            }
+            .class-info-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        .refresh-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #4CAF50;
+            margin-left: 5px;
+            animation: blink 2s infinite;
+        }
+
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .toast-message {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2E7D32;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 500;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            z-index: 2000;
+            animation: toastSlideDown 0.3s ease;
+        }
+
+        @keyframes toastSlideDown {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -20px);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+        }
+
+        .subject-hint {
+            font-size: 11px;
+            color: #2E7D32;
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .auto-badge {
+            background: #34A853;
+            color: white;
+            font-size: 9px;
+            padding: 2px 6px;
+            border-radius: 12px;
+            margin-left: 5px;
+        }
+
+        .sync-badge {
+            background: #FF9800;
+            color: white;
+            font-size: 9px;
+            padding: 2px 6px;
+            border-radius: 12px;
+            margin-left: 5px;
+        }
+
+        .updated-badge {
+            background: #9C27B0;
+            color: white;
+            font-size: 9px;
+            padding: 2px 6px;
+            border-radius: 12px;
+            margin-left: 5px;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <div class="header">
+            <div class="header-top">
+                <div class="app-logo">
+                    <div class="logo-icon"><i class="fas fa-chart-bar"></i></div>
+                    <div class="logo-text">Class<span>Summary</span></div>
+                </div>
+                <a href="teacher-dashboard-unique.html" class="back-btn">
+                    <i class="fas fa-arrow-left"></i> Back
+                </a>
+            </div>
+            <h1>Class Summary Report</h1>
+            <p>College Grading System (1.0 - 5.0) • Complete Academic Records</p>
+            <div class="teacher-badge">
+                <i class="fas fa-user-graduate"></i> 
+                <span id="teacherName">Loading...</span>
+                <span class="auto-badge"><i class="fas fa-sync-alt"></i> Auto-sync</span>
+            </div>
+        </div>
+        
+        <div class="content">
+            <div class="filter-panel">
+                <div class="filter-title">
+                    <i class="fas fa-filter"></i> Filter Class Data
+                </div>
+                <div class="filter-grid">
+                    <div class="filter-item">
+                        <label class="filter-label"><i class="fas fa-book"></i> Subject</label>
+                        <input type="text" class="filter-input" id="filterSubject" placeholder="Type subject name" autocomplete="off">
+                        <div class="subject-hint">
+                            <i class="fas fa-info-circle"></i> Leave blank to show all subjects
+                        </div>
+                    </div>
+                    <div class="filter-item">
+                        <label class="filter-label"><i class="fas fa-users"></i> Section</label>
+                        <input type="text" class="filter-input" id="filterSection" placeholder="e.g., IT-101">
+                    </div>
+                    <div class="filter-item">
+                        <label class="filter-label"><i class="fas fa-layer-group"></i> Year Level</label>
+                        <select class="filter-select" id="filterYearLevel">
+                            <option value="all">All Years</option>
+                            <option value="1st Year">1st Year</option>
+                            <option value="2nd Year">2nd Year</option>
+                            <option value="3rd Year">3rd Year</option>
+                            <option value="4th Year">4th Year</option>
+                            <option value="5th Year">5th Year</option>
+                        </select>
+                    </div>
+                    <div class="filter-item">
+                        <label class="filter-label"><i class="fas fa-layer-group"></i> Semester</label>
+                        <select class="filter-select" id="filterSemester">
+                            <option value="all">All Semesters</option>
+                            <option value="1st Semester">1st Semester</option>
+                            <option value="2nd Semester">2nd Semester</option>
+                            <option value="Summer">Summer</option>
+                        </select>
+                    </div>
+                    <div class="filter-item">
+                        <label class="filter-label"><i class="fas fa-calendar-week"></i> Academic Year</label>
+                        <input type="text" class="filter-input" id="filterAcademicYear" placeholder="2025-2026" value="2025-2026">
+                    </div>
+                </div>
+                <div class="filter-actions">
+                    <button class="btn-secondary" onclick="clearFilters()">
+                        <i class="fas fa-eraser"></i> Clear All
+                    </button>
+                    <button class="btn-primary" onclick="applyFilters()">
+                        <i class="fas fa-search"></i> Apply Filters
+                    </button>
+                </div>
+            </div>
+            
+            <div class="class-info-card">
+                <div class="info-chip"><span class="chip-label"><i class="fas fa-book"></i> Subject:</span><span class="chip-value" id="currentSubject">All Subjects</span></div>
+                <div class="info-chip"><span class="chip-label"><i class="fas fa-users"></i> Section:</span><span class="chip-value" id="currentSection">All Sections</span></div>
+                <div class="info-chip"><span class="chip-label"><i class="fas fa-layer-group"></i> Year:</span><span class="chip-value" id="currentYear">All Years</span></div>
+                <div class="info-chip"><span class="chip-label"><i class="fas fa-layer-group"></i> Semester:</span><span class="chip-value" id="currentSemester">All Semesters</span></div>
+                <div class="info-chip"><span class="chip-label"><i class="fas fa-calendar-week"></i> Academic Year:</span><span class="chip-value" id="currentAcademicYear">2025-2026</span></div>
+            </div>
+            
+            <div id="genderGroups">
+                <div class="empty-state">
+                    <i class="fas fa-spinner fa-pulse"></i>
+                    <p>Loading class data...</p>
+                </div>
+            </div>
+            
+            <div class="summary-cards">
+                <div class="summary-card">
+                    <div class="summary-label"><i class="fas fa-user-graduate"></i> Total Students</div>
+                    <div class="summary-value" id="totalStudents">0</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-label"><i class="fas fa-mars"></i> Male</div>
+                    <div class="summary-value" id="totalMale">0</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-label"><i class="fas fa-venus"></i> Female</div>
+                    <div class="summary-value" id="totalFemale">0</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-label"><i class="fas fa-chart-line"></i> Class GPA</div>
+                    <div class="summary-value" id="classGPA">0.0</div>
+                </div>
+            </div>
+            
+            <button class="export-btn" onclick="exportReport()">
+                <i class="fas fa-download"></i> Export Report (JSON)
+            </button>
+        </div>
+        
+        <div class="footer">
+            <i class="fas fa-chart-simple"></i> Data synced from Add Student, Add Grades, and Edit Grades • 
+            <span id="updateTime">Initializing...</span>
+            <span class="refresh-indicator" title="Auto-refresh every 30 seconds"></span>
+        </div>
+    </div>
+
+    <script>
+        const session = JSON.parse(localStorage.getItem('currentSession'));
+        
+        if (!session || session.role !== 'teacher') {
+            window.location.href = 'index.html';
+        }
+        
+        document.getElementById('teacherName').textContent = session.name || session.username || 'Teacher';
+        
+        let students = [];
+        let grades = [];
+        let allSubjects = [];
+        
+        function showToast(message, isSuccess = true) {
+            const toast = document.createElement('div');
+            toast.className = 'toast-message';
+            toast.style.background = isSuccess ? '#2E7D32' : '#C62828';
+            toast.innerHTML = `<i class="fas fa-${isSuccess ? 'check-circle' : 'exclamation-circle'}"></i> ${message}`;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+        
+        function loadData() {
+            try {
+                // Get all users from localStorage (students who signed up via invite code)
+                const allUsers = JSON.parse(localStorage.getItem('grade_sync_users')) || [];
+                
+                // Get students connected via invite code (teacherId matches)
+                const connectedFromSignup = allUsers.filter(u => 
+                    u.role === 'student' && 
+                    u.teacherId === session.id
+                );
+                
+                // Get students manually added by teacher
+                let manualStudents = [];
+                try {
+                    if (session.storageKeys && session.storageKeys.students) {
+                        manualStudents = JSON.parse(localStorage.getItem(session.storageKeys.students)) || [];
+                    } else {
+                        const fallbackKey = `teacher_${session.id}_students`;
+                        manualStudents = JSON.parse(localStorage.getItem(fallbackKey)) || [];
+                    }
+                } catch(e) {
+                    console.error("Error loading manual students:", e);
+                }
+                
+                // Get grades from teacher's storage
+                let teacherGrades = [];
+                try {
+                    if (session.storageKeys && session.storageKeys.grades) {
+                        teacherGrades = JSON.parse(localStorage.getItem(session.storageKeys.grades)) || [];
+                    } else {
+                        const fallbackKey = `teacher_${session.id}_grades`;
+                        teacherGrades = JSON.parse(localStorage.getItem(fallbackKey)) || [];
+                    }
+                } catch(e) {
+                    console.error("Error loading teacher grades:", e);
+                }
+                
+                // Also get grades from student's own storage (for connected students)
+                let studentGrades = [];
+                connectedFromSignup.forEach(student => {
+                    if (student.storageKeys && student.storageKeys.grades) {
+                        try {
+                            const sGrades = JSON.parse(localStorage.getItem(student.storageKeys.grades)) || [];
+                            sGrades.forEach(grade => {
+                                if (grade.teacherId === session.id) {
+                                    studentGrades.push({
+                                        ...grade,
+                                        studentId: student.id,
+                                        studentEmail: student.email
+                                    });
+                                }
+                            });
+                        } catch(e) {
+                            console.error('Error loading student grades:', e);
+                        }
+                    }
+                });
+                
+                // Combine all grades, avoid duplicates by ID
+                const allGradesMap = new Map();
+                teacherGrades.forEach(g => allGradesMap.set(g.id, g));
+                studentGrades.forEach(g => {
+                    if (!allGradesMap.has(g.id)) {
+                        allGradesMap.set(g.id, g);
+                    }
+                });
+                grades = Array.from(allGradesMap.values());
+                
+                // Get unique subjects from grades
+                const uniqueSubjects = new Set();
+                grades.forEach(grade => {
+                    if (grade.subject) {
+                        uniqueSubjects.add(grade.subject);
+                    }
+                });
+                allSubjects = Array.from(uniqueSubjects).sort();
+                
+                // FIXED: Properly combine students using EMAIL as unique key to avoid duplicates
+                const emailToStudentMap = new Map();
+                
+                // Add from signup (via invite code) first
+                connectedFromSignup.forEach(s => {
+                    const fullName = s.fullName || 
+                        (s.lastName && s.firstName ? `${s.lastName}, ${s.firstName}` : 
+                        (s.name || s.email?.split('@')[0] || 'Student'));
+                    
+                    const studentData = {
+                        id: s.id,
+                        email: s.email,
+                        fullName: fullName,
+                        lastName: s.lastName || '',
+                        firstName: s.firstName || '',
+                        gender: s.gender || 'prefer-not-to-say',
+                        section: s.section || 'Not Specified',
+                        yearLevel: s.yearLevel || '1st Year',
+                        semester: s.semester || '1st Semester',
+                        academicYear: s.academicYear || '2025-2026',
+                        fromSignup: true,
+                        source: 'invite_code',
+                        manuallyUpdated: false
+                    };
+                    
+                    // Use email as the unique key
+                    if (s.email) {
+                        emailToStudentMap.set(s.email.toLowerCase(), studentData);
+                    } else {
+                        // Fallback to ID if no email
+                        emailToStudentMap.set(s.id, studentData);
+                    }
+                });
+                
+                // Add manually added students - merge with existing if same email
+                manualStudents.forEach(s => {
+                    const fullName = s.fullName || 
+                        (s.lastName && s.firstName ? `${s.lastName}, ${s.firstName}` : 
+                        (s.name || 'Student'));
+                    
+                    const emailKey = s.email ? s.email.toLowerCase() : s.id;
+                    const existingStudent = emailToStudentMap.get(emailKey);
+                    
+                    if (existingStudent) {
+                        // UPDATE existing student with manual data (preserve signup connection)
+                        existingStudent.lastName = s.lastName || existingStudent.lastName;
+                        existingStudent.firstName = s.firstName || existingStudent.firstName;
+                        existingStudent.fullName = fullName;
+                        existingStudent.gender = s.gender || existingStudent.gender;
+                        existingStudent.section = s.section || existingStudent.section;
+                        existingStudent.yearLevel = s.yearLevel || existingStudent.yearLevel;
+                        existingStudent.semester = s.semester || existingStudent.semester;
+                        existingStudent.academicYear = s.academicYear || existingStudent.academicYear;
+                        existingStudent.manuallyUpdated = true;
+                        existingStudent.manualData = s;
+                    } else {
+                        // Add as new student
+                        const newStudent = {
+                            id: s.id,
+                            email: s.email,
+                            fullName: fullName,
+                            lastName: s.lastName || '',
+                            firstName: s.firstName || '',
+                            gender: s.gender || 'prefer-not-to-say',
+                            section: s.section || 'Not Specified',
+                            yearLevel: s.yearLevel || '1st Year',
+                            semester: s.semester || '1st Semester',
+                            academicYear: s.academicYear || '2025-2026',
+                            fromSignup: false,
+                            source: 'manual_add',
+                            manuallyUpdated: false
+                        };
+                        
+                        emailToStudentMap.set(emailKey, newStudent);
+                    }
+                });
+                
+                // Convert map to array - this is the CORRECT total count
+                students = Array.from(emailToStudentMap.values());
+                
+                // Update subject suggestions
+                updateSubjectSuggestions();
+                
+                // Show notification for new students
+                const lastCount = parseInt(localStorage.getItem('last_class_summary_count') || '0');
+                if (students.length > lastCount && students.length > 0) {
+                    const newCount = students.length - lastCount;
+                    showToast(`✨ ${newCount} new student${newCount > 1 ? 's' : ''} synced!`, true);
+                }
+                localStorage.setItem('last_class_summary_count', students.length.toString());
+                
+            } catch(e) {
+                console.error('Error loading data:', e);
+                students = [];
+                grades = [];
+                allSubjects = [];
+            }
+        }
+        
+        function updateSubjectSuggestions() {
+            const subjectInput = document.getElementById('filterSubject');
+            if (!subjectInput) return;
+            
+            const datalistId = 'subjectSuggestions';
+            let datalist = document.getElementById(datalistId);
+            
+            if (!datalist) {
+                datalist = document.createElement('datalist');
+                datalist.id = datalistId;
+                subjectInput.setAttribute('list', datalistId);
+                subjectInput.parentNode.appendChild(datalist);
+            }
+            
+            datalist.innerHTML = '';
+            allSubjects.forEach(subject => {
+                const option = document.createElement('option');
+                option.value = subject;
+                datalist.appendChild(option);
+            });
+        }
+        
+        function processCollegeGrade(gradeRecord) {
+            if (!gradeRecord) return null;
+            
+            let prelim = gradeRecord.prelim || gradeRecord.grade1 || 0;
+            let midterm = gradeRecord.midterm || gradeRecord.grade2 || 0;
+            let final = gradeRecord.final || gradeRecord.grade3 || 0;
+            
+            const avgNum = (parseFloat(prelim) + parseFloat(midterm) + parseFloat(final)) / 3;
+            const average = avgNum.toFixed(2);
+            const passed = avgNum <= 3.0 && avgNum >= 1.0;
+            
+            return {
+                prelim: parseFloat(prelim).toFixed(1),
+                midterm: parseFloat(midterm).toFixed(1),
+                final: parseFloat(final).toFixed(1),
+                average: average,
+                passed: passed,
+                statusHtml: passed ? '<span class="status-pass">✓ PASSED</span>' : '<span class="status-fail">✗ FAILED</span>',
+                statusClass: passed ? 'grade-pass' : 'grade-fail',
+                numericAvg: avgNum
+            };
+        }
+        
+        function getFilters() {
+            return {
+                subject: document.getElementById('filterSubject').value.trim(),
+                section: document.getElementById('filterSection').value.trim().toLowerCase(),
+                yearLevel: document.getElementById('filterYearLevel').value,
+                semester: document.getElementById('filterSemester').value,
+                academicYear: document.getElementById('filterAcademicYear').value.trim()
+            };
+        }
+        
+        function updateFilterDisplay(filters) {
+            document.getElementById('currentSubject').textContent = filters.subject || 'All Subjects';
+            document.getElementById('currentSection').textContent = filters.section || 'All Sections';
+            document.getElementById('currentYear').textContent = filters.yearLevel === 'all' ? 'All Years' : filters.yearLevel;
+            document.getElementById('currentSemester').textContent = filters.semester === 'all' ? 'All Semesters' : filters.semester;
+            document.getElementById('currentAcademicYear').textContent = filters.academicYear || '2025-2026';
+        }
+        
+        function filterStudentsList(studentsList, filters) {
+            return studentsList.filter(s => {
+                if (!s) return false;
+                
+                if (filters.section && s.section && !s.section.toLowerCase().includes(filters.section)) return false;
+                if (filters.yearLevel !== 'all' && s.yearLevel !== filters.yearLevel) return false;
+                if (filters.semester !== 'all' && s.semester !== filters.semester) return false;
+                if (filters.academicYear && s.academicYear !== filters.academicYear) return false;
+                
+                return true;
+            });
+        }
+        
+        function escapeHtml(text) {
+            if (!text) return '';
+            return text.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+        
+        function getStudentGrade(studentId, subject) {
+            const matchingGrades = grades.filter(g => g.studentId === studentId && g.subject === subject);
+            if (matchingGrades.length === 0) return null;
+            return matchingGrades.sort((a, b) => new Date(b.date) - new Date(a.date))[0];
+        }
+        
+        function renderGenderGroup(title, icon, studentsList, genderType, selectedSubject) {
+            if (studentsList.length === 0) return '';
+            
+            const genderIcon = genderType === 'male' ? 'mars' : 'venus';
+            const iconColor = genderType === 'male' ? 'gender-male-icon' : 'gender-female-icon';
+            
+            let html = `
+                <div class="gender-group-header">
+                    <div class="gender-group-title">
+                        <i class="fas fa-${genderIcon}"></i> ${title}
+                    </div>
+                    <span class="gender-group-count">${studentsList.length} Student${studentsList.length !== 1 ? 's' : ''}</span>
+                </div>
+                <div class="research-container">
+                    <table class="research-table">
+                        <thead>
+                            <tr>
+                                <th>Subject</th>
+                                <th>Student Name</th>
+                                <th>Prelim</th>
+                                <th>Midterm</th>
+                                <th>Final</th>
+                                <th>Average</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+            
+            const sortedStudents = [...studentsList].sort((a, b) => {
+                const nameA = (a.lastName || a.fullName || '').toLowerCase();
+                const nameB = (b.lastName || b.fullName || '').toLowerCase();
+                return nameA.localeCompare(nameB);
+            });
+            
+            for (const student of sortedStudents) {
+                const fullName = student.lastName && student.firstName ? 
+                    `${student.lastName}, ${student.firstName}` : 
+                    (student.fullName || student.name || student.email?.split('@')[0] || 'Student');
+                
+                // Get all subjects this student has grades for, or show placeholder if none
+                let studentSubjects = [];
+                const studentGrades = grades.filter(g => g.studentId === student.id);
+                
+                if (studentGrades.length > 0) {
+                    studentSubjects = [...new Set(studentGrades.map(g => g.subject))];
+                }
+                
+                let subjectsToShow = [];
+                
+                if (selectedSubject) {
+                    // If subject filter is applied
+                    if (studentSubjects.includes(selectedSubject)) {
+                        subjectsToShow = [selectedSubject];
+                    } else if (studentSubjects.length === 0) {
+                        // Student has no grades, still show the filtered subject
+                        subjectsToShow = [selectedSubject];
+                    } else {
+                        subjectsToShow = [];
+                    }
+                } else if (studentSubjects.length > 0) {
+                    // Show all subjects the student has grades for
+                    subjectsToShow = studentSubjects;
+                } else {
+                    // Student has no grades yet, show placeholder
+                    subjectsToShow = ['No Grades Yet'];
+                }
+                
+                if (subjectsToShow.length === 0) continue;
+                
+                for (const subjectName of subjectsToShow) {
+                    const gradeRecord = getStudentGrade(student.id, subjectName);
+                    const grade = gradeRecord ? processCollegeGrade(gradeRecord) : null;
+                    
+                    html += `<tr class="gender-${genderType}-row">`;
+                    html += `<td style="text-align: left;"><strong>${escapeHtml(subjectName)}</strong>`;
+                    if (subjectName === 'No Grades Yet') {
+                        html += ` <span class="sync-badge"><i class="fas fa-clock"></i> No Grade</span>`;
+                    }
+                    html += `</td>`;
+                    html += `<td style="text-align: left;"><i class="fas fa-${genderIcon} gender-icon-small ${iconColor}"></i> ${escapeHtml(fullName)}`;
+                    
+                    // Show badges based on student source
+                    if (student.manuallyUpdated) {
+                        html += ` <span class="updated-badge"><i class="fas fa-edit"></i> Updated</span>`;
+                    } else if (student.fromSignup) {
+                        html += ` <span class="auto-badge"><i class="fas fa-sync-alt"></i> Auto</span>`;
+                    }
+                    
+                    html += `</td>`;
+                    
+                    if (grade) {
+                        html += `<td><strong>${grade.prelim}</strong></td>`;
+                        html += `<td><strong>${grade.midterm}</strong></td>`;
+                        html += `<td><strong>${grade.final}</strong></td>`;
+                        html += `<td class="${grade.statusClass}"><strong>${grade.average}</strong></td>`;
+                        html += `<td>${grade.statusHtml}</td>`;
+                    } else {
+                        html += `<td>—</td>`;
+                        html += `<td>—</td>`;
+                        html += `<td>—</td>`;
+                        html += `<td>—</td>`;
+                        html += `<td><span class="status-fail">NO GRADE</span></td>`;
+                    }
+                    html += `</tr>`;
+                }
+            }
+            
+            html += `</tbody></table></div>`;
+            return html;
+        }
+        
+        function applyFilters() {
+            loadData();
+            
+            const filters = getFilters();
+            updateFilterDisplay(filters);
+            
+            if (students.length === 0) {
+                document.getElementById('genderGroups').innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-user-plus"></i>
+                        <p>No students found.</p>
+                        <p style="font-size: 12px; margin-top: 10px;">Add students using "Add Student" or share your invite code: <strong>${session.inviteCode || 'TCH-' + (session.id || 'TEACHER').substring(0,6).toUpperCase()}</strong></p>
+                        <p style="font-size: 12px; margin-top: 5px;">Students will appear here after adding grades.</p>
+                    </div>
+                `;
+                // FIXED: Set all stats to 0 when no students
+                document.getElementById('totalStudents').textContent = '0';
+                updateStats(0, 0);
+                document.getElementById('classGPA').textContent = '0.00';
+                return;
+            }
+            
+            let filteredStudents = filterStudentsList(students, filters);
+            
+            if (filteredStudents.length === 0) {
+                document.getElementById('genderGroups').innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-filter"></i>
+                        <p>No students match your filter criteria.</p>
+                        <button class="btn-secondary" onclick="clearFilters()" style="margin-top: 15px;">
+                            <i class="fas fa-undo"></i> Clear Filters
+                        </button>
+                    </div>
+                `;
+                // FIXED: Set stats based on filtered count (0 in this case)
+                document.getElementById('totalStudents').textContent = '0';
+                updateStats(0, 0);
+                document.getElementById('classGPA').textContent = '0.00';
+                return;
+            }
+            
+            filteredStudents.sort((a, b) => {
+                const nameA = (a.lastName || a.fullName || '').toLowerCase();
+                const nameB = (b.lastName || b.fullName || '').toLowerCase();
+                return nameA.localeCompare(nameB);
+            });
+            
+            const maleStudents = filteredStudents.filter(s => s.gender === 'male');
+            const femaleStudents = filteredStudents.filter(s => s.gender === 'female');
+            const otherStudents = filteredStudents.filter(s => s.gender !== 'male' && s.gender !== 'female');
+            
+            const selectedSubject = filters.subject;
+            
+            let html = '';
+            html += renderGenderGroup('Male Students', 'fas fa-mars', maleStudents, 'male', selectedSubject);
+            html += renderGenderGroup('Female Students', 'fas fa-venus', femaleStudents, 'female', selectedSubject);
+            if (otherStudents.length > 0) {
+                html += renderGenderGroup('Other Students', 'fas fa-user', otherStudents, 'other', selectedSubject);
+            }
+            
+            if (html === '') {
+                html = `
+                    <div class="empty-state">
+                        <i class="fas fa-search"></i>
+                        <p>No data to display with current filters.</p>
+                    </div>
+                `;
+            }
+            
+            document.getElementById('genderGroups').innerHTML = html;
+            
+            // Calculate class GPA
+            let totalGPA = 0;
+            let gradedCount = 0;
+            
+            filteredStudents.forEach(student => {
+                let studentGrades = grades.filter(g => g.studentId === student.id);
+                
+                // Apply subject filter to grades calculation
+                if (selectedSubject) {
+                    studentGrades = studentGrades.filter(g => g.subject && g.subject.toLowerCase().includes(selectedSubject.toLowerCase()));
+                }
+                
+                studentGrades.forEach(grade => {
+                    const processed = processCollegeGrade(grade);
+                    if (processed) {
+                        totalGPA += processed.numericAvg;
+                        gradedCount++;
+                    }
+                });
+            });
+            
+            const classGPA = gradedCount > 0 ? (totalGPA / gradedCount).toFixed(2) : '0.00';
+            
+            // FIXED: Update total students to show FILTERED count, not all students
+            document.getElementById('totalStudents').textContent = filteredStudents.length;
+            document.getElementById('classGPA').textContent = classGPA;
+            updateStats(maleStudents.length, femaleStudents.length);
+            document.getElementById('updateTime').textContent = `Updated ${new Date().toLocaleString()}`;
+        }
+        
+        function updateStats(male, female) {
+            document.getElementById('totalMale').textContent = male;
+            document.getElementById('totalFemale').textContent = female;
+        }
+        
+        function clearFilters() {
+            document.getElementById('filterSubject').value = '';
+            document.getElementById('filterSection').value = '';
+            document.getElementById('filterYearLevel').value = 'all';
+            document.getElementById('filterSemester').value = 'all';
+            document.getElementById('filterAcademicYear').value = '2025-2026';
+            applyFilters();
+            showToast('Filters cleared!');
+        }
+        
+        function exportReport() {
+            loadData();
+            
+            const filters = getFilters();
+            
+            const exportData = {
+                exportedBy: session.name || session.username,
+                exportDate: new Date().toISOString(),
+                inviteCode: session.inviteCode,
+                filters: {
+                    subject: filters.subject || 'All Subjects',
+                    section: filters.section || 'All Sections',
+                    yearLevel: filters.yearLevel === 'all' ? 'All Years' : filters.yearLevel,
+                    semester: filters.semester === 'all' ? 'All Semesters' : filters.semester,
+                    academicYear: filters.academicYear
+                },
+                totalStudents: students.length,
+                totalGrades: grades.length,
+                studentRecords: students.map(s => {
+                    const studentGrades = grades.filter(g => g.studentId === s.id);
+                    const avgGrade = studentGrades.length > 0 ? 
+                        (studentGrades.reduce((sum, g) => sum + ((g.prelim + g.midterm + g.final) / 3), 0) / studentGrades.length).toFixed(2) : 'N/A';
+                    
+                    return {
+                        fullName: s.lastName ? `${s.lastName}, ${s.firstName}` : (s.fullName || s.name || s.email),
+                        email: s.email,
+                        gender: s.gender === 'male' ? 'Male' : (s.gender === 'female' ? 'Female' : 'Other'),
+                        section: s.section || 'N/A',
+                        yearLevel: s.yearLevel || 'N/A',
+                        semester: s.semester || 'N/A',
+                        academicYear: s.academicYear || 'N/A',
+                        fromSignup: s.fromSignup || false,
+                        manuallyUpdated: s.manuallyUpdated || false,
+                        subjects: studentGrades.map(g => ({
+                            subject: g.subject,
+                            prelim: parseFloat(g.prelim).toFixed(1),
+                            midterm: parseFloat(g.midterm).toFixed(1),
+                            final: parseFloat(g.final).toFixed(1),
+                            average: ((parseFloat(g.prelim) + parseFloat(g.midterm) + parseFloat(g.final)) / 3).toFixed(2),
+                            status: ((parseFloat(g.prelim) + parseFloat(g.midterm) + parseFloat(g.final)) / 3) <= 3.0 ? 'PASSED' : 'FAILED'
+                        })),
+                        overallAverage: avgGrade,
+                        overallStatus: parseFloat(avgGrade) <= 3.0 ? 'PASSING' : 'FAILING'
+                    };
+                })
+            };
+            
+            const dataStr = JSON.stringify(exportData, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `class-summary-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            showToast('✓ Report exported successfully!');
+        }
+        
+        loadData();
+        applyFilters();
+        
+        setInterval(() => {
+            loadData();
+            applyFilters();
+        }, 30000);
+    </script>
+</body>
+</html>
